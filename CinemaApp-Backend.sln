@@ -11,6 +11,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CinemaApp.API", "CinemaApp.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CinemaApp.Auth", "CinemaApp.Auth\CinemaApp.Auth.csproj", "{0799C667-D462-40E5-B38E-C8CDA586FFA2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CinemaApp.Domain", "CinemaApp.Domain\CinemaApp.Domain.csproj", "{47D05719-407B-4019-BFCB-1230CCF7FA76}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CinemaApp.DAL", "CinemaApp.DAL\CinemaApp.DAL.csproj", "{5241264C-AC63-4F89-BB2A-6BB2BB617EB2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +37,14 @@ Global
 		{0799C667-D462-40E5-B38E-C8CDA586FFA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0799C667-D462-40E5-B38E-C8CDA586FFA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0799C667-D462-40E5-B38E-C8CDA586FFA2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{47D05719-407B-4019-BFCB-1230CCF7FA76}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47D05719-407B-4019-BFCB-1230CCF7FA76}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47D05719-407B-4019-BFCB-1230CCF7FA76}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47D05719-407B-4019-BFCB-1230CCF7FA76}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5241264C-AC63-4F89-BB2A-6BB2BB617EB2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5241264C-AC63-4F89-BB2A-6BB2BB617EB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5241264C-AC63-4F89-BB2A-6BB2BB617EB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5241264C-AC63-4F89-BB2A-6BB2BB617EB2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
