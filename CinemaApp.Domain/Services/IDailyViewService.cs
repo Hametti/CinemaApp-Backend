@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CinemaApp.DAL.Repositories
+namespace CinemaApp.Domain.Services
 {
-    public interface IDailyViewRepository : IBaseRepository<DailyView>
+    public interface IDailyViewService
     {
         public IEnumerable<DailyView> GetDailyViews();
         public void AddDailyView(DailyView dailyViewToAdd);

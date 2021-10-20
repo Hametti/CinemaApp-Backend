@@ -16,9 +16,9 @@ namespace CinemaApp.DAL.Repositories
 
         }
 
-        public void AddDailyView(DailyView DailyViewToAdd)
+        public void AddDailyView(DailyView dailyViewToAdd)
         {
-            _cinemaAppDbContext.DailyViews.Add(DailyViewToAdd);
+            _cinemaAppDbContext.DailyViews.Add(dailyViewToAdd);
             _cinemaAppDbContext.SaveChanges();
         }
 
@@ -27,19 +27,24 @@ namespace CinemaApp.DAL.Repositories
             
         }
 
-        public void DeleteDailyView(DailyView DailyViewToDelete)
+        public void DeleteDailyView(DailyView dailyViewToDelete)
         {
-            var dailyViewToDelete = _cinemaAppDbContext.DailyViews
-                                .Where(d => d.DailyViewId == DailyViewToDelete.DailyViewId)
-                                .Include(v => v.movieList)
-                                .ThenInclude(s => s.ShowingHours)
-                                .FirstOrDefault();
-            _cinemaAppDbContext.DailyViews.Remove(dailyViewToDelete);
+            var viewToDelete = _cinemaAppDbContext.DailyViews
+                                //add include
+                                .FirstOrDefault(d => d.DailyViewId == dailyViewToDelete.DailyViewId);
+
+            _cinemaAppDbContext.DailyViews.Remove(viewToDelete);
+            _cinemaAppDbContext.SaveChanges();
         }
 
         public IEnumerable<DailyView> GetDailyViews()
         {
-            throw new NotImplementedException();
+            var viewsToDelete = _cinemaAppDbContext.DailyViews
+                                .Include(v => v.movieList)
+                                .ThenInclude(s => s.ShowingHours)
+                                .ToList();
+
+            return viewsToDelete;
         }
     }
 }

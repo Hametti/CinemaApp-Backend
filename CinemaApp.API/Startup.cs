@@ -9,6 +9,9 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using CinemaApp.Auth.Interfaces;
 using CinemaApp.Auth.Classes;
+using CinemaApp.DAL.Repositories;
+using CinemaApp.Domain.Services;
+using CinemaApp.Data;
 
 namespace CinemaApp.API
 {
@@ -30,6 +33,10 @@ namespace CinemaApp.API
                        .AllowAnyMethod()
                        .AllowAnyHeader();
             }));
+
+            services.AddDbContext<CinemaAppDbContext>();
+            services.AddScoped<IDailyViewRepository, DailyViewRepository>();
+            services.AddScoped<IDailyViewService, DailyViewService>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>

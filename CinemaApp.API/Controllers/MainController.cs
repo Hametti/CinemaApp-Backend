@@ -1,5 +1,6 @@
 ﻿using CinemaApp.Auth.Classes;
 using CinemaApp.Auth.Interfaces;
+using CinemaApp.Domain.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

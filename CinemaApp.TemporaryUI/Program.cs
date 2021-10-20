@@ -12,13 +12,14 @@ namespace CinemaApp.TemporaryUI
         private static CinemaAppDbContext _context = new CinemaAppDbContext();
         static void Main(string[] args)
         {
+            //_context.Database.EnsureCreated();
             //DeleteDailyViewById(1);
             //AddDailyView();
             //GetDailyViews();
             //Console.ReadKey();
 
             //Correct linq query to get object by id
-            var viewToDisplay = _context.DailyViews.Where(d => d.DailyViewId == 2).Include(v => v.movieList).ThenInclude(s => s.ShowingHours).FirstOrDefault();
+            //var viewToDisplay = _context.DailyViews.Where(d => d.DailyViewId == 2).Include(v => v.movieList).ThenInclude(s => s.ShowingHours).FirstOrDefault();
             //DisplayView(viewToDisplay);
             Console.ReadKey();
         }
