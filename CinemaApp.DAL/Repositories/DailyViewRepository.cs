@@ -34,7 +34,7 @@ namespace CinemaApp.DAL.Repositories
                                 .Include(v => v.movieList)
                                 .ThenInclude(s => s.ShowingHours)
                                 .FirstOrDefault();
-            _cinemaAppDbContext.DailyViews.Remove(dailyViewToDelete)
+            _cinemaAppDbContext.DailyViews.Remove(dailyViewToDelete);
         }
 
         public IEnumerable<DailyView> GetDailyViews()
