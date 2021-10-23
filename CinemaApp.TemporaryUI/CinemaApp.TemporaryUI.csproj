@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CinemaApp.Data\CinemaApp.Database.csproj" />
+    <ProjectReference Include="..\CinemaApp.Database\CinemaApp.Database.csproj" />
   </ItemGroup>
 
 </Project>

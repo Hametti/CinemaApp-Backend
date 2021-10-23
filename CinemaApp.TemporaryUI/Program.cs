@@ -12,7 +12,7 @@ namespace CinemaApp.TemporaryUI
         private static CinemaAppDbContext _context = new CinemaAppDbContext();
         static void Main(string[] args)
         {
-            //DisplayMovies();
+            DisplayMovies();
             //DisplayDailyViews();
             //AddDailyView();
             //UpdateRecord();
