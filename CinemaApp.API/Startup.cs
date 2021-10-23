@@ -11,7 +11,7 @@ using CinemaApp.Auth.Interfaces;
 using CinemaApp.Auth.Classes;
 using CinemaApp.DAL.Repositories;
 using CinemaApp.Domain.Services;
-using CinemaApp.Data;
+using CinemaApp.Database;
 
 namespace CinemaApp.API
 {

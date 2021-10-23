@@ -1,5 +1,5 @@
 ﻿using CinemaApp.DAL.Repositories;
-using CinemaApp.Data.Entities.Movie;
+using CinemaApp.Database.Entities.Movie;
 using System;
 using System.Collections.Generic;
 using System.Linq;

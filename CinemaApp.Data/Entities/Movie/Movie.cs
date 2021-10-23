@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CinemaApp.Data.Entities.Movie
+namespace CinemaApp.Database.Entities.Movie
 {
     public class Movie
     {
-        public int MovieId { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; }
-        public int DailyViewId { get; set; }
-        public List<ShowingHour> ShowingHours { get; set; }
+        public List<DailyView> DailyViewList { get; set; }
+        public List<ShowingHour> ShowingHourList { get; set; }
     }
 }

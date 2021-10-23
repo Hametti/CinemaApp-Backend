@@ -1,5 +1,5 @@
-﻿using CinemaApp.Data;
-using CinemaApp.Data.Entities.Movie;
+﻿using CinemaApp.Database;
+using CinemaApp.Database.Entities.Movie;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -31,7 +31,7 @@ namespace CinemaApp.DAL.Repositories
         {
             var viewToDelete = _cinemaAppDbContext.DailyViews
                                 //add include
-                                .FirstOrDefault(d => d.DailyViewId == dailyViewToDelete.DailyViewId);
+                                .FirstOrDefault(d => d.Id == dailyViewToDelete.Id);
 
             _cinemaAppDbContext.DailyViews.Remove(viewToDelete);
             _cinemaAppDbContext.SaveChanges();
@@ -40,8 +40,8 @@ namespace CinemaApp.DAL.Repositories
         public IEnumerable<DailyView> GetDailyViews()
         {
             var viewsToDelete = _cinemaAppDbContext.DailyViews
-                                .Include(v => v.movieList)
-                                .ThenInclude(s => s.ShowingHours)
+                                .Include(v => v.MovieList)
+                                .ThenInclude(s => s.ShowingHourList)
                                 .ToList();
 
             return viewsToDelete;

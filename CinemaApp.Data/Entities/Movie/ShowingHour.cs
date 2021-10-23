@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CinemaApp.Data.Entities.Movie
+namespace CinemaApp.Database.Entities.Movie
 {
     public class ShowingHour
     {
-        public int ShowingHourId { get; set; }
+        public int Id { get; set; }
         public string Hour { get; set; }
-        public int MovieId { get; set; }
+        public List<Movie> MovieList { get; set; } = new List<Movie>();
     }
 }

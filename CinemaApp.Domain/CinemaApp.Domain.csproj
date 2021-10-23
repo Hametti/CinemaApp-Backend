@@ -11,7 +11,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CinemaApp.DAL\CinemaApp.DAL.csproj" />
-    <ProjectReference Include="..\CinemaApp.Data\CinemaApp.Data.csproj" />
+    <ProjectReference Include="..\CinemaApp.Data\CinemaApp.Database.csproj" />
   </ItemGroup>
 
 </Project>

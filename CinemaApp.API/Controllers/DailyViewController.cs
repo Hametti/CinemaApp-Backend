@@ -1,4 +1,4 @@
-﻿using CinemaApp.Data.Entities.Movie;
+﻿using CinemaApp.Database.Entities.Movie;
 using CinemaApp.Domain.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

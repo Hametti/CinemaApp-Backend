@@ -5,12 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore.Design;
 
-namespace CinemaApp.Data.Entities.Movie
+namespace CinemaApp.Database.Entities.Movie
 {
     public class DailyView
     {
-        public int DailyViewId { get; set; }
+        public int Id { get; set; }
         public string Date { get; set; }
-        public List<Movie> movieList { get; set; }
+        public List<Movie> MovieList { get; set; }
     }
 }
