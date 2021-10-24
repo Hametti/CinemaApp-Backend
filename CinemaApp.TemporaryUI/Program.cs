@@ -13,10 +13,13 @@ namespace CinemaApp.TemporaryUI
         static void Main(string[] args)
         {
             //AddSampleMovies();
-            //DisplayDailyViews();
-            //AddDailyView();
             //UpdateRecord();
             //DeleteRecord();
+
+            //DisplayScreeningDays();
+            //AddSampleScreeningDays();
+            //DeleteRecord();
+            DisplayScreeningDays();
             //DisplayMovies();
 
             Console.WriteLine("\nSucceed");
@@ -25,35 +28,154 @@ namespace CinemaApp.TemporaryUI
 
         private static void DeleteRecord()
         {
-            var hourToDelete = _context.ShowingHours.FirstOrDefault(h => h.Hour == "19:15");
+            var screeningDays = _context.ScreeningDays
+                .Include(s => s.Screenings)
+                .ThenInclude(s => s.Movie)
+                .Include(s => s.Screenings)
+                .ThenInclude(s => s.ScreeningHours);
 
-            _context.ShowingHours.Remove(hourToDelete);
+            _context.ScreeningDays.RemoveRange(screeningDays);
+
+            var movies = _context.Movies.ToList();
+            _context.Movies.RemoveRange(movies);
+
             _context.SaveChanges();
+
+            //working cascade movie deletion
+            //var movie = _context.Movies.FirstOrDefault(m => m.Id == 3);
+            //var screenings = _context.Screenings.Include(s => s.Movie).Include(s => s.ScreeningHours).ToList();
+            //var screeningsToDelete = new List<Screening>();
+
+            //foreach(Screening screening in screenings)
+            //{
+            //    if (screening.Movie.Id == movie.Id)
+            //        screeningsToDelete.Add(screening);
+            //}
+
+            //_context.Screenings.RemoveRange(screeningsToDelete);
+
+            //_context.Movies.Remove(movie);
+            //_context.SaveChanges();
         }
 
-        private static void AddDailyView()
+        private static void DisplayScreeningDays()
         {
-            
-            DailyView objectToAdd = new DailyView
+            var screeningDays = _context.ScreeningDays
+                                .Include(s => s.Screenings)
+                                .ThenInclude(s => s.Movie)
+                                .Include(s => s.Screenings)
+                                .ThenInclude(s => s.ScreeningHours)
+                                .ToList();
+
+            foreach (ScreeningDay screeningDay in screeningDays)
             {
-                Date = "25-10",
-                MovieList = new List<Movie>
+                Console.WriteLine($"Screening Day Id: {screeningDay.Id}");
+                Console.WriteLine($"Screening Day Date: {screeningDay.Date}");
+                Console.WriteLine("\nScreening Day Screenings:\n");
+                foreach(Screening screening in screeningDay.Screenings)
                 {
-                    new Movie
+                    Console.WriteLine($"Screening Id: {screening.Id}");
+                    Console.WriteLine($"Screening Movie Id: {screening.Movie.Id}");
+                    Console.WriteLine($"Screening Movie Title: {screening.Movie.Title}");
+                    Console.WriteLine("\nScreening Hours:\n");
+                    foreach (ScreeningHour screeningHour in screening.ScreeningHours)
+                        Console.WriteLine($"Id: {screeningHour.Id}, Hour: {screeningHour.Hour} ");
+                    Console.WriteLine("\n-----\n");
+                }
+                Console.WriteLine("\n-----------------------------------------\n");
+            }
+        }
+
+        private static void AddSampleScreeningDays()
+        {
+            var movies = _context.Movies.ToList();
+
+            List<ScreeningDay> screeningDays = new List<ScreeningDay>()
+            {
+                new ScreeningDay
+                {
+                    Date = "25-10",
+                    Screenings = new List<Screening>
                     {
-                        Title= "No Time To Die",
-                        ShowingHourList = new List<ShowingHour>{ new ShowingHour() { Hour = "19:15" } }
-                    },
-                    new Movie
+                        new Screening
+                        {
+                            Movie = movies.FirstOrDefault(m => m.Title == "No Time To Die"),
+                            ScreeningHours = new List<ScreeningHour> { new ScreeningHour { Hour = "12:00" }, new ScreeningHour { Hour = "17:45" }, new ScreeningHour { Hour = "21:00" } }
+                        },
+                        new Screening
+                        {
+                            Movie = movies.FirstOrDefault(m => m.Title == "Suicide Squad"),
+                            ScreeningHours = new List<ScreeningHour> { new ScreeningHour { Hour = "15:00" } }
+                        }
+                    }
+                },
+                new ScreeningDay
+                {
+                    Date = "26-10",
+                    Screenings = new List<Screening>
                     {
-                        Title= "Suicide Squad",
-                        ShowingHourList = new List<ShowingHour>{ new ShowingHour() { Hour = "12:00" }, new ShowingHour() { Hour = "15:00" } }
+                        new Screening
+                        {
+                            Movie = movies.FirstOrDefault(m => m.Title == "Inception"),
+                            ScreeningHours = new List<ScreeningHour> { new ScreeningHour { Hour = "12:00" } }
+                        },
+                        new Screening
+                        {
+                            Movie = movies.FirstOrDefault(m => m.Title == "Green Mile"),
+                            ScreeningHours = new List<ScreeningHour> { new ScreeningHour { Hour = "18:30" } }
+                        },
+                        new Screening
+                        {
+                            Movie = movies.FirstOrDefault(m => m.Title == "Interstellar"),
+                            ScreeningHours = new List<ScreeningHour> { new ScreeningHour { Hour = "15:00" }, new ScreeningHour { Hour = "21:00" } }
+                        }
+                    }
+                },
+                new ScreeningDay
+                {
+                    Date = "27-10",
+                    Screenings = new List<Screening>
+                    {
+                        new Screening
+                        {
+                            Movie = movies.FirstOrDefault(m => m.Title == "No Time To Die"),
+                            ScreeningHours = new List<ScreeningHour> { new ScreeningHour { Hour = "15:30" }, new ScreeningHour { Hour = "21:15" } }
+                        },
+                        new Screening
+                        {
+                            Movie = movies.FirstOrDefault(m => m.Title == "Interstellar"),
+                            ScreeningHours = new List<ScreeningHour> { new ScreeningHour { Hour = "12:00" } }
+                        },
+                        new Screening
+                        {
+                            Movie = movies.FirstOrDefault(m => m.Title == "Suicide Squad"),
+                            ScreeningHours = new List<ScreeningHour> { new ScreeningHour { Hour = "18:45" } }
+                        }
                     }
                 }
             };
 
-            _context.DailyViews.Add(objectToAdd);
+            _context.ScreeningDays.AddRange(screeningDays);
             _context.SaveChanges();
+        }
+
+        private static void AddSampleScreenings()
+        {
+            //var movies = _context.Movies.ToList();
+
+            //List<Screening> screenings = new List<Screening>()
+            //{
+            //    new Screening
+            //    {
+            //        Movie = movies[0],
+            //        ScreeningHours = new List<ScreeningHour>() { new ScreeningHour { Hour = "12:00" }, new ScreeningHour { Hour = "15:00" } }
+            //    },
+            //    new Screening
+            //    {
+            //        Movie = movies[2],
+            //        ScreeningHours = new List<ScreeningHour>() { new ScreeningHour { Hour = "18:00" } }
+            //    }
+            //};
         }
 
         private static void AddSampleMovies()
@@ -131,76 +253,49 @@ namespace CinemaApp.TemporaryUI
             _context.SaveChanges();
         }
 
-        private static void DisplayDailyViews()
-        {
-            var dailyViews = _context.DailyViews.Include(v => v.MovieList).ThenInclude(s => s.ShowingHourList).ToList();
-
-            foreach(DailyView dailyView in dailyViews)
-            {
-                Console.WriteLine($"Daily view id: {dailyView.Id}");
-                Console.WriteLine($"Daily view date: {dailyView.Date}\n");
-
-                Console.WriteLine("DailyView movies:");
-                foreach(Movie movie in dailyView.MovieList)
-                {
-                    Console.WriteLine($"Movie Id: {movie.Id}");
-                    Console.WriteLine($"Movie Id: {movie.Id}\n");
-
-                    Console.WriteLine("Movie showing hours: ");
-                    foreach(ShowingHour showingHour in movie.ShowingHourList)
-                    {
-                        Console.WriteLine($"{showingHour.Hour} ");
-                    }
-                }
-
-                Console.WriteLine("-----------------------------------------");
-                Console.WriteLine();
-            }
-            
-        }
-
         private static void DisplayMovies()
         {
-            var movies = _context.Movies.Include(m => m.DailyViewList).Include(m => m.ShowingHourList).ToList();
-
-            Console.WriteLine("All movies:");
-            
-            foreach(Movie movie in movies)
+            var movies = _context.Movies.ToList();
+            Console.WriteLine("Movies: ");
+            foreach (Movie movie in movies)
             {
                 Console.WriteLine($"Movie Id: {movie.Id}");
                 Console.WriteLine($"Movie Title: {movie.Title}");
-                Console.WriteLine($"Movie PictureUrl: {movie.PictureUrl}");
-                Console.WriteLine($"Movie Director: {movie.Director}");
-                Console.WriteLine($"Movie Cast: {movie.Cast}");
-                Console.WriteLine($"Movie ShortDescription: {movie.ShortDescription}");
-                Console.WriteLine($"Movie LongDescription: {movie.LongDescription}");
-                Console.WriteLine($"Movie ReleaseYear: {movie.ReleaseYear}");
-                Console.WriteLine($"Movie Language: {movie.Language}");
-                Console.WriteLine($"Movie Duration: {movie.Duration}");
-                Console.WriteLine($"Movie Budget: {movie.Budget}\n");
-
-                Console.WriteLine($"Movie DailyViewList: ");
-                foreach(DailyView dailyView in movie.DailyViewList)
-                    Console.WriteLine($"Movie DailyView: {dailyView.Id}");
-                Console.WriteLine();
-
-                Console.WriteLine("Movie ShowingHourList: ");
-                foreach(ShowingHour showingHour in movie.ShowingHourList)
-                {
-                    Console.WriteLine($"ShowingHourId: {showingHour.Id}");
-                    Console.WriteLine($"ShowingHour: {showingHour.Hour}");
-                    Console.WriteLine();
-                }
-                Console.WriteLine("-----------------------------------------");
+                Console.WriteLine("\n--------------------------------------------\n");
             }
+        }
+
+        private static void DisplayDailyViews()
+        {
+            //var dailyViews = _context.DailyViews.Include(v => v.MovieList).ThenInclude(s => s.ShowingHourList).ToList();
+
+            //foreach(DailyView dailyView in dailyViews)
+            //{
+            //    Console.WriteLine($"Daily view id: {dailyView.Id}");
+            //    Console.WriteLine($"Daily view date: {dailyView.Date}\n");
+
+            //    Console.WriteLine("DailyView movies:");
+            //    foreach(Movie movie in dailyView.MovieList)
+            //    {
+            //        Console.WriteLine($"Movie Id: {movie.Id}");
+            //        Console.WriteLine($"Movie Id: {movie.Id}\n");
+
+            //        Console.WriteLine("Movie showing hours: ");
+            //        foreach(ShowingHour showingHour in movie.ShowingHourList)
+            //        {
+            //            Console.WriteLine($"{showingHour.Hour} ");
+            //        }
+            //    }
+
+            //    Console.WriteLine("-----------------------------------------");
+            //    Console.WriteLine();
+            //}
+            
         }
 
         static void UpdateRecord()
         {
-            var movie = _context.Movies.Include(m => m.ShowingHourList).FirstOrDefault(m => m.Id == 2);
-            var showingHourToAdd = _context.ShowingHours.FirstOrDefault(h => h.Id == 1);
-            movie.ShowingHourList.Add(showingHourToAdd);
-            _context.SaveChanges();
+
         }
     }
 }

@@ -15,6 +15,9 @@ namespace CinemaApp.DAL.Repositories.BaseRepository
             cinemaAppDbContext.Database.EnsureCreated();
             _cinemaAppDbContext = cinemaAppDbContext;
         }
+
+        public abstract Entity GetEntityById(int id);
+
         public void SaveChanges()
         {
             _cinemaAppDbContext.SaveChanges();

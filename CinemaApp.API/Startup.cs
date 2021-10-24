@@ -9,13 +9,13 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using CinemaApp.Auth.Interfaces;
 using CinemaApp.Auth.Classes;
-using CinemaApp.DAL.Repositories;
-using CinemaApp.Domain.Services;
 using CinemaApp.Database;
-using CinemaApp.DAL.Repositories.DailyViewRepository;
-using CinemaApp.Domain.Services.DailyViewService;
 using CinemaApp.DAL.Repositories.MovieRepository;
 using CinemaApp.Domain.Services.MovieService;
+using CinemaApp.DAL.Repositories.ScreeningRepository;
+using CinemaApp.Domain.Services.ScreeningService;
+using CinemaApp.DAL.Repositories.ScreeningDayRepository;
+using CinemaApp.Domain.Services.ScreeningDayService;
 
 namespace CinemaApp.API
 {
@@ -42,10 +42,14 @@ namespace CinemaApp.API
             
             //DbContext
             services.AddDbContext<CinemaAppDbContext>();
+            
+            //ScreeningDay
+            services.AddScoped<IScreeningDayRepository, ScreeningDayRepository>();
+            services.AddScoped<IScreeningDayService, ScreeningDayService>();
 
-            //DailyView
-            services.AddScoped<IDailyViewRepository, DailyViewRepository>();
-            services.AddScoped<IDailyViewService, DailyViewService>();
+            //Screening
+            services.AddScoped<IScreeningRepository, ScreeningRepository>();
+            services.AddScoped<IScreeningService, ScreeningService>();
 
             //Movie
             services.AddScoped<IMovieRepository, MovieRepository>();

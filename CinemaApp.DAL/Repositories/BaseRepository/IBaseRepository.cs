@@ -8,6 +8,7 @@ namespace CinemaApp.DAL.Repositories.BaseRepository
 {
     public interface IBaseRepository<Entity>
     {
+        Entity GetEntityById(int id);
         void SaveChanges();
     }
 }

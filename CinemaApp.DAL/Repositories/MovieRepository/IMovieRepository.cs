@@ -10,7 +10,6 @@ namespace CinemaApp.DAL.Repositories.MovieRepository
 {
     public interface IMovieRepository : IBaseRepository<Movie>
     {
-        public Movie GetEntityById(int id);
         public IEnumerable<Movie> GetAllMovies();
         public void AddMovie(Movie movie);
         public void DeleteMovieById(int id);

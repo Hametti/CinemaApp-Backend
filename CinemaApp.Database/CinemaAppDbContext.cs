@@ -5,9 +5,10 @@ namespace CinemaApp.Database
 {
     public class CinemaAppDbContext : DbContext
     {
-        public DbSet<DailyView> DailyViews { get; set; }
         public DbSet<Movie> Movies { get; set; }
-        public DbSet<ShowingHour> ShowingHours { get; set; }
+        public DbSet<Screening> Screenings { get; set; }
+        public DbSet<ScreeningDay> ScreeningDays { get; set; }
+        public DbSet<ScreeningHour> ScreeningHours { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -17,13 +18,7 @@ namespace CinemaApp.Database
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<DailyView>()
-                .HasMany(s => s.MovieList)
-                .WithMany(m => m.DailyViewList);
-
-            modelBuilder.Entity<Movie>()
-                .HasMany(m => m.ShowingHourList)
-                .WithMany(h => h.MovieList);
+                
         }
     }
 }

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace CinemaApp.Database.Entities.Movie
 {
@@ -19,7 +15,5 @@ namespace CinemaApp.Database.Entities.Movie
         public string Language { get; set; }
         public string Duration { get; set; }
         public string Budget { get; set; }
-        public List<DailyView> DailyViewList { get; set; }
-        public List<ShowingHour> ShowingHourList { get; set; }
     }
 }

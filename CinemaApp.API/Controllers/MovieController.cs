@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 
 namespace CinemaApp.API.Controllers
 {
-    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class MovieController : Controller

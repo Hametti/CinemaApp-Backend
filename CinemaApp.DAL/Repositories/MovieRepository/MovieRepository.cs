@@ -17,26 +17,6 @@ namespace CinemaApp.DAL.Repositories.MovieRepository
 
         }
 
-        public IEnumerable<Movie> GetAllMovies()
-        {
-            var movies = _cinemaAppDbContext.Movies
-                        .Include(m => m.DailyViewList)
-                        .Include(m => m.ShowingHourList)
-                        .ToList();
-
-            return movies;
-        }
-
-        public Movie GetEntityById(int id)
-        {
-            var movie = _cinemaAppDbContext.Movies
-                        .Include(m => m.DailyViewList)
-                        .Include(m => m.ShowingHourList)
-                        .FirstOrDefault(m => m.Id == id);
-
-            return movie;
-        }
-
         public void AddMovie(Movie movie)
         {
             _cinemaAppDbContext.Movies.Add(movie);
@@ -45,13 +25,22 @@ namespace CinemaApp.DAL.Repositories.MovieRepository
 
         public void DeleteMovieById(int id)
         {
-            var movie = _cinemaAppDbContext.Movies
-                        .Include(m => m.DailyViewList)
-                        .Include(m => m.ShowingHourList)
-                        .FirstOrDefault(m => m.Id == id);
+            var movieToDelete = _cinemaAppDbContext.Movies.FirstOrDefault(m => m.Id == id);
 
-            _cinemaAppDbContext.Movies.Remove(movie);
+            _cinemaAppDbContext.Movies.Remove(movieToDelete);
             _cinemaAppDbContext.SaveChanges();
+        }
+
+        public IEnumerable<Movie> GetAllMovies()
+        {
+            var movies = _cinemaAppDbContext.Movies.ToList();
+            return movies;
+        }
+
+        public override Movie GetEntityById(int id)
+        {
+            var movie = _cinemaAppDbContext.Movies.FirstOrDefault(m => m.Id == id);
+            return movie;
         }
     }
 }

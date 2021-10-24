@@ -7,19 +7,6 @@ namespace CinemaApp.Database.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "DailyViews",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Date = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_DailyViews", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Movies",
                 columns: table => new
                 {
@@ -42,93 +29,93 @@ namespace CinemaApp.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ShowingHours",
+                name: "ScreeningDays",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Hour = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Date = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ShowingHours", x => x.Id);
+                    table.PrimaryKey("PK_ScreeningDays", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "DailyViewMovie",
+                name: "Screenings",
                 columns: table => new
                 {
-                    DailyViewListId = table.Column<int>(type: "int", nullable: false),
-                    MovieListId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    MovieId = table.Column<int>(type: "int", nullable: true),
+                    ScreeningDayId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_DailyViewMovie", x => new { x.DailyViewListId, x.MovieListId });
+                    table.PrimaryKey("PK_Screenings", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_DailyViewMovie_DailyViews_DailyViewListId",
-                        column: x => x.DailyViewListId,
-                        principalTable: "DailyViews",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_DailyViewMovie_Movies_MovieListId",
-                        column: x => x.MovieListId,
+                        name: "FK_Screenings_Movies_MovieId",
+                        column: x => x.MovieId,
                         principalTable: "Movies",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Screenings_ScreeningDays_ScreeningDayId",
+                        column: x => x.ScreeningDayId,
+                        principalTable: "ScreeningDays",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "MovieShowingHour",
+                name: "ScreeningHours",
                 columns: table => new
                 {
-                    MovieListId = table.Column<int>(type: "int", nullable: false),
-                    ShowingHourListId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Hour = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ScreeningId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_MovieShowingHour", x => new { x.MovieListId, x.ShowingHourListId });
+                    table.PrimaryKey("PK_ScreeningHours", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_MovieShowingHour_Movies_MovieListId",
-                        column: x => x.MovieListId,
-                        principalTable: "Movies",
+                        name: "FK_ScreeningHours_Screenings_ScreeningId",
+                        column: x => x.ScreeningId,
+                        principalTable: "Screenings",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_MovieShowingHour_ShowingHours_ShowingHourListId",
-                        column: x => x.ShowingHourListId,
-                        principalTable: "ShowingHours",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_DailyViewMovie_MovieListId",
-                table: "DailyViewMovie",
-                column: "MovieListId");
+                name: "IX_ScreeningHours_ScreeningId",
+                table: "ScreeningHours",
+                column: "ScreeningId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MovieShowingHour_ShowingHourListId",
-                table: "MovieShowingHour",
-                column: "ShowingHourListId");
+                name: "IX_Screenings_MovieId",
+                table: "Screenings",
+                column: "MovieId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Screenings_ScreeningDayId",
+                table: "Screenings",
+                column: "ScreeningDayId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "DailyViewMovie");
+                name: "ScreeningHours");
 
             migrationBuilder.DropTable(
-                name: "MovieShowingHour");
-
-            migrationBuilder.DropTable(
-                name: "DailyViews");
+                name: "Screenings");
 
             migrationBuilder.DropTable(
                 name: "Movies");
 
             migrationBuilder.DropTable(
-                name: "ShowingHours");
+                name: "ScreeningDays");
         }
     }
 }
