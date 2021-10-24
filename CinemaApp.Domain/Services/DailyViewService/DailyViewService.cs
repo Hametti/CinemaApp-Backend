@@ -1,4 +1,5 @@
 ﻿using CinemaApp.DAL.Repositories;
+using CinemaApp.DAL.Repositories.DailyViewRepository;
 using CinemaApp.Database.Entities.Movie;
 using System;
 using System.Collections.Generic;
@@ -6,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CinemaApp.Domain.Services
+namespace CinemaApp.Domain.Services.DailyViewService
 {
     public class DailyViewService : IDailyViewService
     {
@@ -28,10 +29,10 @@ namespace CinemaApp.Domain.Services
             _dailyViewRepository.DeleteAllDailyViews();
         }
 
-        public void DeleteDailyView(DailyView dailyViewToDelete)
+        public void DeleteDailyViewById(int id)
         {
             //validate data
-            _dailyViewRepository.DeleteDailyView(dailyViewToDelete);
+            _dailyViewRepository.DeleteDailyViewById(id);
         }
 
         public IEnumerable<DailyView> GetDailyViews()

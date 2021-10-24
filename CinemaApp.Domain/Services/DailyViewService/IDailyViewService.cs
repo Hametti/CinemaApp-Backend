@@ -5,13 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CinemaApp.DAL.Repositories
+namespace CinemaApp.Domain.Services.DailyViewService
 {
-    public interface IDailyViewRepository : IBaseRepository<DailyView>
+    public interface IDailyViewService
     {
         public IEnumerable<DailyView> GetDailyViews();
         public void AddDailyView(DailyView dailyViewToAdd);
-        public void DeleteDailyView(DailyView dailyViewToDelete);
+        public void DeleteDailyViewById(int id);
         public void DeleteAllDailyViews();
     }
 }

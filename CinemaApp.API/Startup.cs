@@ -12,6 +12,10 @@ using CinemaApp.Auth.Classes;
 using CinemaApp.DAL.Repositories;
 using CinemaApp.Domain.Services;
 using CinemaApp.Database;
+using CinemaApp.DAL.Repositories.DailyViewRepository;
+using CinemaApp.Domain.Services.DailyViewService;
+using CinemaApp.DAL.Repositories.MovieRepository;
+using CinemaApp.Domain.Services.MovieService;
 
 namespace CinemaApp.API
 {
@@ -34,9 +38,18 @@ namespace CinemaApp.API
                        .AllowAnyHeader();
             }));
 
+            //Dependency injection:
+            
+            //DbContext
             services.AddDbContext<CinemaAppDbContext>();
+
+            //DailyView
             services.AddScoped<IDailyViewRepository, DailyViewRepository>();
             services.AddScoped<IDailyViewService, DailyViewService>();
+
+            //Movie
+            services.AddScoped<IMovieRepository, MovieRepository>();
+            services.AddScoped<IMovieService, MovieService>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>

@@ -1,5 +1,6 @@
 ﻿using CinemaApp.Database.Entities.Movie;
 using CinemaApp.Domain.Services;
+using CinemaApp.Domain.Services.DailyViewService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -49,12 +50,12 @@ namespace CinemaApp.API.Controllers
             }
         }
 
-        [HttpDelete("delete")]
-        public IActionResult DeleteDailyView([FromBody] DailyView dailyView)
+        [HttpDelete("delete/{id}")]
+        public IActionResult DeleteDailyViewById(int id)
         {
             try
             {
-                _dailyViewService.DeleteDailyView(dailyView);
+                _dailyViewService.DeleteDailyViewById(id);
                 return Ok();
             }
             catch (Exception)

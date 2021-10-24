@@ -1,17 +1,18 @@
-﻿using CinemaApp.Database.Entities.Movie;
+﻿using CinemaApp.DAL.Repositories.BaseRepository;
+using CinemaApp.Database.Entities.Movie;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CinemaApp.Domain.Services
+namespace CinemaApp.DAL.Repositories.DailyViewRepository
 {
-    public interface IDailyViewService
+    public interface IDailyViewRepository : IBaseRepository<DailyView>
     {
         public IEnumerable<DailyView> GetDailyViews();
         public void AddDailyView(DailyView dailyViewToAdd);
-        public void DeleteDailyView(DailyView dailyViewToDelete);
+        public void DeleteDailyViewById(int id);
         public void DeleteAllDailyViews();
     }
 }
