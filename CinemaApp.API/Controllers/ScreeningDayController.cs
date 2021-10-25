@@ -1,4 +1,4 @@
-﻿using CinemaApp.Database.Entities.Movie;
+﻿using CinemaApp.Database.Entities.MovieModels;
 using CinemaApp.Domain.DTO.ScreeningDayDTOModels;
 using CinemaApp.Domain.Services.ScreeningDayService;
 using Microsoft.AspNetCore.Mvc;

@@ -4,14 +4,16 @@ using CinemaApp.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CinemaApp.Database.Migrations
 {
     [DbContext(typeof(CinemaAppDbContext))]
-    partial class CinemaAppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211025103241_added-usercreds")]
+    partial class addedusercreds
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -131,12 +133,7 @@ namespace CinemaApp.Database.Migrations
                     b.Property<string>("Password")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("UserId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("UserCreds");
                 });
@@ -237,15 +234,6 @@ namespace CinemaApp.Database.Migrations
                     b.HasOne("CinemaApp.Database.Entities.MovieModels.Screening", null)
                         .WithMany("ScreeningHours")
                         .HasForeignKey("ScreeningId");
-                });
-
-            modelBuilder.Entity("CinemaApp.Database.Entities.UserCred", b =>
-                {
-                    b.HasOne("CinemaApp.Database.Entities.UserModels.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("CinemaApp.Database.Entities.UserModels.Reservation", b =>

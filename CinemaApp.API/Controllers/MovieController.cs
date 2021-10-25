@@ -1,4 +1,4 @@
-﻿using CinemaApp.Database.Entities.Movie;
+﻿using CinemaApp.Database.Entities.MovieModels;
 using CinemaApp.Domain.Services.MovieService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -31,6 +31,13 @@ namespace CinemaApp.API.Controllers
         {
             var movie = _movieService.GetEntityById(id);
             return Ok(movie);
+        }
+
+        [HttpGet("five")]
+        public IActionResult GetFiveMovies()
+        {
+            var movies = _movieService.GetFivemovies();
+            return Ok(movies);
         }
 
         [HttpPost("add")]

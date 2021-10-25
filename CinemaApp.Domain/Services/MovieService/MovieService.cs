@@ -1,5 +1,5 @@
 ﻿using CinemaApp.DAL.Repositories.MovieRepository;
-using CinemaApp.Database.Entities.Movie;
+using CinemaApp.Database.Entities.MovieModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,6 +40,18 @@ namespace CinemaApp.Domain.Services.MovieService
             var movie = _movieRepository.GetEntityById(id);
             //check for errors
             return movie;
+        }
+
+        public IEnumerable<Movie> GetFivemovies()
+        {
+            var movies = _movieRepository.GetFivemovies();
+            return movies;
+        }
+
+        public Movie GetRandomMovie()
+        {
+            //check for errors
+            return _movieRepository.GetRandomMovie();
         }
     }
 }

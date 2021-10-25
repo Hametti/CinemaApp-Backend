@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace CinemaApp.Database.Entities.Movie
+namespace CinemaApp.Database.Entities.MovieModels
 {
     public class Movie
     {

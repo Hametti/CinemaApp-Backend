@@ -1,4 +1,4 @@
-﻿using CinemaApp.Database.Entities.Movie;
+﻿using CinemaApp.Database.Entities.MovieModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;

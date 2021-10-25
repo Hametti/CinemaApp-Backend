@@ -1,5 +1,5 @@
 ﻿using CinemaApp.DAL.Repositories.ScreeningDayRepository;
-using CinemaApp.Database.Entities.Movie;
+using CinemaApp.Database.Entities.MovieModels;
 using CinemaApp.Domain.DTO.ScreeningDayDTOModels;
 using System;
 using System.Collections.Generic;

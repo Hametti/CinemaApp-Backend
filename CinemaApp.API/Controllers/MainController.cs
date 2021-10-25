@@ -1,5 +1,6 @@
 ﻿using CinemaApp.Auth.Classes;
 using CinemaApp.Auth.Interfaces;
+using CinemaApp.DAL.Repositories.Authentication;
 using CinemaApp.Domain.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -17,9 +18,11 @@ namespace CinemaApp.API.Controllers
     public class MainController : ControllerBase
     {
         private readonly IJwtAuthenticationManager jwtAuthenticationManager;
-        public MainController(IJwtAuthenticationManager jwtAuthenticationManager)
+        private readonly IAuthenticationRepository authenticationRepository;
+        public MainController(IJwtAuthenticationManager jwtAuthenticationManager, IAuthenticationRepository authenticationRepository)
         {
             this.jwtAuthenticationManager = jwtAuthenticationManager;
+            this.authenticationRepository = authenticationRepository;
         }
 
         [HttpGet]
@@ -32,11 +35,18 @@ namespace CinemaApp.API.Controllers
         [HttpPost("authenticate")]
         public IActionResult Authenticate([FromBody] UserCred userCred)
         {
-            var token = jwtAuthenticationManager.Authenticate(userCred.Username, userCred.Password);
-            if (token == null)
-                return Unauthorized();
-            else
+            var userCredCorrect = authenticationRepository.CheckUserCreds(userCred.Username, userCred.Password);
+
+            if (userCredCorrect)
+            {
+                var token = jwtAuthenticationManager.Authenticate(userCred.Username, userCred.Password);
                 return Ok(token);
+            }
+
+            else
+                return Unauthorized(null);
+            
         }
+
     }
 }

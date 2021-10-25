@@ -1,4 +1,4 @@
-﻿using CinemaApp.Database.Entities.Movie;
+﻿using CinemaApp.Database.Entities.MovieModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,5 +13,7 @@ namespace CinemaApp.Domain.Services.MovieService
         public IEnumerable<Movie> GetAllMovies();
         public void AddMovie(Movie movie);
         public void DeleteMovieById(int id);
+        public IEnumerable<Movie> GetFivemovies();
+        public Movie GetRandomMovie();
     }
 }

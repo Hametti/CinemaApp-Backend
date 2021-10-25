@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CinemaApp.Database.Entities.Movie
+namespace CinemaApp.Database.Entities.MovieModels
 {
     public class ScreeningDay
     {

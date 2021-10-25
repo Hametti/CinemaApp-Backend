@@ -1,6 +1,6 @@
 ﻿using CinemaApp.DAL.Repositories.BaseRepository;
 using CinemaApp.Database;
-using CinemaApp.Database.Entities.Movie;
+using CinemaApp.Database.Entities.MovieModels;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -40,6 +40,18 @@ namespace CinemaApp.DAL.Repositories.MovieRepository
         public override Movie GetEntityById(int id)
         {
             var movie = _cinemaAppDbContext.Movies.FirstOrDefault(m => m.Id == id);
+            return movie;
+        }
+
+        public IEnumerable<Movie> GetFivemovies()
+        {
+            var movies = _cinemaAppDbContext.Movies.Take(5).ToList();
+            return movies;
+        }
+
+        public Movie GetRandomMovie()
+        {
+            var movie = _cinemaAppDbContext.Movies.ToList().OrderBy(o => Guid.NewGuid()).First();
             return movie;
         }
     }

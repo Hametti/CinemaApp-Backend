@@ -1,4 +1,6 @@
-﻿using CinemaApp.Database.Entities.Movie;
+﻿using CinemaApp.Database.Entities;
+using CinemaApp.Database.Entities.MovieModels;
+using CinemaApp.Database.Entities.UserModels;
 using Microsoft.EntityFrameworkCore;
 
 namespace CinemaApp.Database
@@ -9,6 +11,10 @@ namespace CinemaApp.Database
         public DbSet<Screening> Screenings { get; set; }
         public DbSet<ScreeningDay> ScreeningDays { get; set; }
         public DbSet<ScreeningHour> ScreeningHours { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<Reservation> Reservations { get; set; }
+        public DbSet<Seat> Seats { get; set; }
+        public DbSet<UserCred> UserCreds { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

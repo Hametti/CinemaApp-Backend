@@ -4,11 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CinemaApp.Database.Entities.Movie
+namespace CinemaApp.Database.Entities.UserModels
 {
-    public class ScreeningHour
+    public class Seat
     {
         public int Id { get; set; }
-        public string Hour { get; set; }
+        public int Row { get; set; }
+        public int SeatNumber { get; set; }
     }
 }

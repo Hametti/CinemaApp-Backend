@@ -1,5 +1,5 @@
 ﻿using CinemaApp.DAL.Repositories.BaseRepository;
-using CinemaApp.Database.Entities.Movie;
+using CinemaApp.Database.Entities.MovieModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,5 +13,7 @@ namespace CinemaApp.DAL.Repositories.MovieRepository
         public IEnumerable<Movie> GetAllMovies();
         public void AddMovie(Movie movie);
         public void DeleteMovieById(int id);
+        public IEnumerable<Movie> GetFivemovies();
+        public Movie GetRandomMovie();
     }
 }

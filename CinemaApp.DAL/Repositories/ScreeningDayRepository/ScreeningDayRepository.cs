@@ -1,6 +1,6 @@
 ﻿using CinemaApp.DAL.Repositories.BaseRepository;
 using CinemaApp.Database;
-using CinemaApp.Database.Entities.Movie;
+using CinemaApp.Database.Entities.MovieModels;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;

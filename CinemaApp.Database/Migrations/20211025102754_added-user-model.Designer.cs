@@ -4,14 +4,16 @@ using CinemaApp.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CinemaApp.Database.Migrations
 {
     [DbContext(typeof(CinemaAppDbContext))]
-    partial class CinemaAppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211025102754_added-user-model")]
+    partial class addedusermodel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -118,107 +120,6 @@ namespace CinemaApp.Database.Migrations
                     b.ToTable("ScreeningHours");
                 });
 
-            modelBuilder.Entity("CinemaApp.Database.Entities.UserCred", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Password")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserCreds");
-                });
-
-            modelBuilder.Entity("CinemaApp.Database.Entities.UserModels.Reservation", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Date")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("ScreeningId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ScreeningId");
-
-                    b.ToTable("Reservations");
-                });
-
-            modelBuilder.Entity("CinemaApp.Database.Entities.UserModels.Seat", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int?>("ReservationId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Row")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SeatNumber")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ReservationId");
-
-                    b.ToTable("Seats");
-                });
-
-            modelBuilder.Entity("CinemaApp.Database.Entities.UserModels.User", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsAdmin")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SecurityQuestion")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SecurityQuestionAnswer")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("Subscription")
-                        .HasColumnType("bit");
-
-                    b.Property<int?>("UniqueDiscountId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UniqueDiscountId");
-
-                    b.ToTable("Users");
-                });
-
             modelBuilder.Entity("CinemaApp.Database.Entities.MovieModels.Screening", b =>
                 {
                     b.HasOne("CinemaApp.Database.Entities.MovieModels.Movie", "Movie")
@@ -239,40 +140,6 @@ namespace CinemaApp.Database.Migrations
                         .HasForeignKey("ScreeningId");
                 });
 
-            modelBuilder.Entity("CinemaApp.Database.Entities.UserCred", b =>
-                {
-                    b.HasOne("CinemaApp.Database.Entities.UserModels.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("CinemaApp.Database.Entities.UserModels.Reservation", b =>
-                {
-                    b.HasOne("CinemaApp.Database.Entities.MovieModels.Screening", "Screening")
-                        .WithMany()
-                        .HasForeignKey("ScreeningId");
-
-                    b.Navigation("Screening");
-                });
-
-            modelBuilder.Entity("CinemaApp.Database.Entities.UserModels.Seat", b =>
-                {
-                    b.HasOne("CinemaApp.Database.Entities.UserModels.Reservation", null)
-                        .WithMany("Seats")
-                        .HasForeignKey("ReservationId");
-                });
-
-            modelBuilder.Entity("CinemaApp.Database.Entities.UserModels.User", b =>
-                {
-                    b.HasOne("CinemaApp.Database.Entities.MovieModels.Movie", "UniqueDiscount")
-                        .WithMany()
-                        .HasForeignKey("UniqueDiscountId");
-
-                    b.Navigation("UniqueDiscount");
-                });
-
             modelBuilder.Entity("CinemaApp.Database.Entities.MovieModels.Screening", b =>
                 {
                     b.Navigation("ScreeningHours");
@@ -281,11 +148,6 @@ namespace CinemaApp.Database.Migrations
             modelBuilder.Entity("CinemaApp.Database.Entities.MovieModels.ScreeningDay", b =>
                 {
                     b.Navigation("Screenings");
-                });
-
-            modelBuilder.Entity("CinemaApp.Database.Entities.UserModels.Reservation", b =>
-                {
-                    b.Navigation("Seats");
                 });
 #pragma warning restore 612, 618
         }
