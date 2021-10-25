@@ -1,4 +1,5 @@
 ﻿using CinemaApp.Database.Entities.MovieModels;
+using CinemaApp.Domain.DTO.UserDTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,5 +16,6 @@ namespace CinemaApp.Domain.Services.MovieService
         public void DeleteMovieById(int id);
         public IEnumerable<Movie> GetFivemovies();
         public Movie GetRandomMovie();
+        public WeeklyDiscountMovieDTO GetWeeklyDiscountMovie();
     }
 }

@@ -1,10 +1,12 @@
 ﻿using CinemaApp.DAL.Repositories.UserRepository;
 using CinemaApp.Database.Entities;
+using CinemaApp.Database.Entities.MovieModels;
 using CinemaApp.Database.Entities.UserModels;
 using CinemaApp.Domain.DTO.UserDTO;
 using CinemaApp.Domain.Services.MovieService;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,7 +23,7 @@ namespace CinemaApp.Domain.Services.UserService
             _movieService = movieService;
         }
 
-        public void AddUser(UserDTO user)
+        public void AddUser(UserCredDTO user)
         {
             //check for errors
             //convert DTO to user
@@ -42,6 +44,57 @@ namespace CinemaApp.Domain.Services.UserService
             };
 
             _userRepository.AddUser(userToAdd, userCredToAdd);
+        }
+
+        public UserDTO GetUserByToken(string token)
+        {
+            var JWTtoken = new JwtSecurityToken(token);
+            string email = JWTtoken.Claims.FirstOrDefault(c => c.Type == "unique_name").Value;
+            var user = _userRepository.GetUserByEmail(email);
+            var userToReturn = new UserDTO
+            {
+                Email = user.Email,
+                Name = user.Name,
+                Subscription = user.Subscription,
+                DiscountMovie = user.UniqueDiscount
+            };
+
+            return userToReturn;
+        }
+
+        public WeeklyDiscountMovieDTO GetUserDiscount(string jwtToken)
+        {
+            var JWTtoken = new JwtSecurityToken(jwtToken);
+            string email = JWTtoken.Claims.FirstOrDefault(c => c.Type == "unique_name").Value;
+            var user = _userRepository.GetUserByEmail(email);
+
+            var weeklyDiscountToReturn = new WeeklyDiscountMovieDTO
+            {
+                DiscountMovie = user.UniqueDiscount,
+                DiscountValue = 50
+            };
+
+            return weeklyDiscountToReturn;
+        }
+
+        public void SubscribeNewsletter(string jwtToken)
+        {
+            //check for errors
+            var JWTtoken = new JwtSecurityToken(jwtToken);
+            string email = JWTtoken.Claims.FirstOrDefault(c => c.Type == "unique_name").Value;
+            var user = _userRepository.GetUserByEmail(email);
+
+            _userRepository.SubscribeNewsletter(user);
+        }
+
+        public void UnsubscribeNewsletter(string jwtToken)
+        {
+            //check for errors
+            var JWTtoken = new JwtSecurityToken(jwtToken);
+            string email = JWTtoken.Claims.FirstOrDefault(c => c.Type == "unique_name").Value;
+            var user = _userRepository.GetUserByEmail(email);
+
+            _userRepository.UnsubscribeNewsletter(user);
         }
     }
 }

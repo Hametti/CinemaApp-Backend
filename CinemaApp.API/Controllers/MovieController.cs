@@ -1,4 +1,5 @@
 ﻿using CinemaApp.Database.Entities.MovieModels;
+using CinemaApp.Domain.DTO.UserDTO;
 using CinemaApp.Domain.Services.MovieService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -38,6 +39,13 @@ namespace CinemaApp.API.Controllers
         {
             var movies = _movieService.GetFivemovies();
             return Ok(movies);
+        }
+
+        [HttpGet("weeklydiscountmovie")]
+        public IActionResult GetWeeklyDiscountMovie()
+        {
+            var weeklyDiscount = _movieService.GetWeeklyDiscountMovie();
+            return Ok(weeklyDiscount);
         }
 
         [HttpPost("add")]

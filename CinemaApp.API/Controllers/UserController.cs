@@ -19,10 +19,38 @@ namespace CinemaApp.API.Controllers
         }
 
         [HttpPost("add")]
-        public IActionResult AddUser(UserDTO user)
+        public IActionResult AddUser(UserCredDTO user)
         {
-            _userService.AddUser(user);
+           // _userService.AddUser(user);
             return Ok("Succeed. Now you can log in.");
+        }
+
+        [HttpGet("getUserByToken")]
+        public IActionResult GetUserByToken([FromHeader]string JwtToken)
+        {
+            var user = _userService.GetUserByToken(JwtToken);
+            return Ok(user);
+        }
+
+        [HttpGet("getUserDiscount")]
+        public IActionResult GetUserDiscount([FromHeader] string JwtToken)
+        {
+            var discount = _userService.GetUserDiscount(JwtToken);
+            return Ok(discount);
+        }
+
+        [HttpGet("subscribeNewsletter")]
+        public IActionResult SubscribeNewsletter([FromHeader] string JwtToken)
+        {
+            _userService.SubscribeNewsletter(JwtToken);
+            return Ok("Newsletter subscribed");
+        }
+
+        [HttpGet("unsubscribeNewsletter")]
+        public IActionResult UnsubscribeNewsletter([FromHeader] string JwtToken)
+        {
+            _userService.UnsubscribeNewsletter(JwtToken);
+            return Ok("Newsletter unsubscribed");
         }
     }
 }

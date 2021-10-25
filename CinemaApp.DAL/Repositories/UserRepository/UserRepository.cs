@@ -2,6 +2,7 @@
 using CinemaApp.Database;
 using CinemaApp.Database.Entities;
 using CinemaApp.Database.Entities.UserModels;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,11 +18,6 @@ namespace CinemaApp.DAL.Repositories.UserRepository
 
         }
 
-        public void AddUser(User user)
-        {
-            throw new NotImplementedException();
-        }
-
         public void AddUser(User user, UserCred userCred)
         {
             _cinemaAppDbContext.Users.Add(user);
@@ -31,7 +27,26 @@ namespace CinemaApp.DAL.Repositories.UserRepository
 
         public override User GetEntityById(int id)
         {
-            throw new NotImplementedException();
+            return _cinemaAppDbContext.Users.Include(u => u.UniqueDiscount).FirstOrDefault(u => u.Id == id);
+        }
+
+        public User GetUserByEmail(string email)
+        {
+            return _cinemaAppDbContext.Users.Include(u => u.UniqueDiscount).FirstOrDefault(u => u.Email == email);
+        }
+
+        public void SubscribeNewsletter(User user)
+        {
+            var userToChange = _cinemaAppDbContext.Users.FirstOrDefault(u => u.Id == user.Id);
+            userToChange.Subscription = true;
+            _cinemaAppDbContext.SaveChanges();
+        }
+
+        public void UnsubscribeNewsletter(User user)
+        {
+            var userToChange = _cinemaAppDbContext.Users.FirstOrDefault(u => u.Id == user.Id);
+            userToChange.Subscription = false;
+            _cinemaAppDbContext.SaveChanges();
         }
     }
 }

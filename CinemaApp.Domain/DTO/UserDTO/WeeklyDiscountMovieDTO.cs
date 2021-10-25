@@ -7,11 +7,9 @@ using System.Threading.Tasks;
 
 namespace CinemaApp.Domain.DTO.UserDTO
 {
-    public class UserDTO
+    public class WeeklyDiscountMovieDTO
     {
-        public string Email { get; set; }
-        public string Name { get; set; }
-        public Movie DiscountMovie{ get; set; }
-        public bool Subscription { get; set; }
+        public Movie DiscountMovie { get; set; }
+        public int DiscountValue { get; set; }
     }
 }

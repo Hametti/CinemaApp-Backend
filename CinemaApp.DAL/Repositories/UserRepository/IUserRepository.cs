@@ -12,5 +12,8 @@ namespace CinemaApp.DAL.Repositories.UserRepository
     public interface IUserRepository : IBaseRepository<User>
     {
         public void AddUser(User user, UserCred userCred);
+        User GetUserByEmail(string email);
+        void SubscribeNewsletter(User user);
+        void UnsubscribeNewsletter(User user);
     }
 }

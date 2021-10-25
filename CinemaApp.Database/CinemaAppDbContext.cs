@@ -15,6 +15,7 @@ namespace CinemaApp.Database
         public DbSet<Reservation> Reservations { get; set; }
         public DbSet<Seat> Seats { get; set; }
         public DbSet<UserCred> UserCreds { get; set; }
+        public DbSet<WeeklyDiscountMovie> WeeklyDiscountMovie { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

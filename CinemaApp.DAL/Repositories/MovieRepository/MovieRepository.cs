@@ -54,5 +54,11 @@ namespace CinemaApp.DAL.Repositories.MovieRepository
             var movie = _cinemaAppDbContext.Movies.ToList().OrderBy(o => Guid.NewGuid()).First();
             return movie;
         }
+
+        public WeeklyDiscountMovie GetWeeklyDiscountMovie()
+        {
+            var weeklyDiscount = _cinemaAppDbContext.WeeklyDiscountMovie.Include(w => w.WeeklyDiscount).FirstOrDefault();
+            return weeklyDiscount;
+        }
     }
 }

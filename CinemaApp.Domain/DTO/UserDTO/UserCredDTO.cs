@@ -1,5 +1,4 @@
-﻿using CinemaApp.Database.Entities.MovieModels;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,11 +6,12 @@ using System.Threading.Tasks;
 
 namespace CinemaApp.Domain.DTO.UserDTO
 {
-    public class UserDTO
+    public class UserCredDTO
     {
         public string Email { get; set; }
+        public string Password { get; set; }
         public string Name { get; set; }
-        public Movie DiscountMovie{ get; set; }
-        public bool Subscription { get; set; }
+        public string SecurityQuestion { get; set; }
+        public string SecurityQuestionAnswer { get; set; }
     }
 }

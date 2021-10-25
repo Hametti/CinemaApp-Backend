@@ -15,5 +15,6 @@ namespace CinemaApp.DAL.Repositories.MovieRepository
         public void DeleteMovieById(int id);
         public IEnumerable<Movie> GetFivemovies();
         public Movie GetRandomMovie();
+        public WeeklyDiscountMovie GetWeeklyDiscountMovie();
     }
 }

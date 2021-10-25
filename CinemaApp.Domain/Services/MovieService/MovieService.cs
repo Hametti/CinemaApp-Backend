@@ -1,5 +1,6 @@
 ﻿using CinemaApp.DAL.Repositories.MovieRepository;
 using CinemaApp.Database.Entities.MovieModels;
+using CinemaApp.Domain.DTO.UserDTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -52,6 +53,18 @@ namespace CinemaApp.Domain.Services.MovieService
         {
             //check for errors
             return _movieRepository.GetRandomMovie();
+        }
+
+        public WeeklyDiscountMovieDTO GetWeeklyDiscountMovie()
+        {
+            //check for errors
+            var weeklyDiscount = _movieRepository.GetWeeklyDiscountMovie();
+            var weeklyDiscountToReturn = new WeeklyDiscountMovieDTO
+            {
+                DiscountMovie = weeklyDiscount.WeeklyDiscount,
+                DiscountValue = weeklyDiscount.WeeklyDiscountValue
+            };
+            return weeklyDiscountToReturn;
         }
     }
 }

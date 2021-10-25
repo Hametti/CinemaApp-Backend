@@ -3,6 +3,7 @@ using CinemaApp.Database.Entities.MovieModels;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 
 namespace CinemaApp.TemporaryUI
@@ -12,6 +13,9 @@ namespace CinemaApp.TemporaryUI
         private static CinemaAppDbContext _context = new CinemaAppDbContext();
         static void Main(string[] args)
         {
+            var weeklyDiscount = _context.WeeklyDiscountMovie.Include(w => w.WeeklyDiscount).FirstOrDefault();
+            Console.WriteLine(weeklyDiscount.WeeklyDiscount.Title);
+            Console.WriteLine(weeklyDiscount.WeeklyDiscountValue);
             //AddSampleMovies();
             //UpdateRecord();
             //DeleteRecord();
@@ -19,9 +23,13 @@ namespace CinemaApp.TemporaryUI
             //DisplayScreeningDays();
             //AddSampleScreeningDays();
             //DeleteRecord();
-            DisplayScreeningDays();
+            //DisplayScreeningDays();
             //DisplayMovies();
 
+            //string token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6InVzZXIxQGdtYWlsLmNvbSIsIm5iZiI6MTYzNTE3Nzk5NCwiZXhwIjoxNjM1MTgxNTk0LCJpYXQiOjE2MzUxNzc5OTR9.V_sU5i1UO6MViFDcYRPzEEYUjEsLoSzxj3uUg0CJBYs";
+            //var JWTtoken = new JwtSecurityToken(token);
+            //string email = JWTtoken.Claims.FirstOrDefault(c => c.Type == "unique_name").Value;
+            //Console.WriteLine(email);
             Console.WriteLine("\nSucceed");
             Console.ReadKey();
         }
