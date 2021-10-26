@@ -11,5 +11,6 @@ namespace CinemaApp.Database.Entities.UserModels
         public int Id { get; set; }
         public int Row { get; set; }
         public int SeatNumber { get; set; }
+        public bool IsOccupied { get; set; }
     }
 }
