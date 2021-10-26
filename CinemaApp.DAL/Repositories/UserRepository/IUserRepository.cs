@@ -17,5 +17,6 @@ namespace CinemaApp.DAL.Repositories.UserRepository
         void UnsubscribeNewsletter(User user);
         bool IsPasswordCorrect(string email, string password);
         bool ChangeUserPassword(string email, string currentPassword, string newPassword);
+        void DeleteAccount(string email, string password);
     }
 }

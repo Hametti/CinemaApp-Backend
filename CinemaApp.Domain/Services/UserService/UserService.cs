@@ -48,6 +48,9 @@ namespace CinemaApp.Domain.Services.UserService
 
         public UserDTO GetUserByToken(string token)
         {
+            if (token == "{}" || token == "" || token == null)
+                throw new ArgumentException();
+            
             var JWTtoken = new JwtSecurityToken(token);
             string email = JWTtoken.Claims.FirstOrDefault(c => c.Type == "unique_name").Value;
             var user = _userRepository.GetUserByEmail(email);
@@ -109,6 +112,33 @@ namespace CinemaApp.Domain.Services.UserService
             var user = _userRepository.GetUserByEmail(email);
 
             _userRepository.UnsubscribeNewsletter(user);
+        }
+
+        public bool DeleteAccount(string password, string jwtToken)
+        {
+            if (IsPasswordCorrect(password, jwtToken))
+            {
+                var email = GetEmailFromToken(jwtToken);
+                _userRepository.DeleteAccount(email, password);
+                return true;
+            }
+            else
+                return false;
+        }
+
+        public bool IsPasswordCorrect(string password, string jwtToken)
+        {
+            var JWTtoken = new JwtSecurityToken(jwtToken);
+            string email = JWTtoken.Claims.FirstOrDefault(c => c.Type == "unique_name").Value;
+
+            var result = _userRepository.IsPasswordCorrect(email, password);
+            return result;
+        }
+        private string GetEmailFromToken(string jwtToken)
+        {
+            var JWTtoken = new JwtSecurityToken(jwtToken);
+            string email = JWTtoken.Claims.FirstOrDefault(c => c.Type == "unique_name").Value;
+            return email;
         }
     }
 }

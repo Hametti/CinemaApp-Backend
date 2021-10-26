@@ -22,15 +22,23 @@ namespace CinemaApp.API.Controllers
         [HttpPost("add")]
         public IActionResult AddUser(UserDataDTO user)
         {
-           // _userService.AddUser(user);
+            _userService.AddUser(user);
             return Ok("Succeed. Now you can log in.");
         }
 
         [HttpGet("getUserByToken")]
         public IActionResult GetUserByToken([FromHeader]string JwtToken)
         {
-            var user = _userService.GetUserByToken(JwtToken);
-            return Ok(user);
+            try
+            {
+                var user = _userService.GetUserByToken(JwtToken);
+                return Ok(user);
+            }
+            catch(Exception)
+            {
+                return BadRequest("Token is empty");
+            }
+            
         }
 
         [HttpGet("getUserDiscount")]
@@ -59,6 +67,24 @@ namespace CinemaApp.API.Controllers
         {
             var result = _userService.ChangePassword(currentPassword, newPassword, jwtToken);
             return Ok(result);
+        }
+
+        [HttpPost("deleteaccount")]
+        public IActionResult DeleteAccount([FromHeader]string password, [FromHeader]string jwtToken)
+        {
+            try
+            {
+                var result = _userService.DeleteAccount(password, jwtToken);
+                if (result)
+                    return Ok();
+                else
+                    return Unauthorized("Your password isn't correct");
+            }
+            catch(Exception)
+            {
+                return BadRequest("Something went wrong");
+            }
+            
         }
     }
 }

@@ -38,6 +38,21 @@ namespace CinemaApp.DAL.Repositories.UserRepository
                 return false;
         }
 
+        public void DeleteAccount(string email, string password)
+        {
+            var userCredToDelete = _cinemaAppDbContext.UserCreds
+                                   .Include(u => u.User)
+                                   .ThenInclude(u => u.UniqueDiscount)
+                                   .FirstOrDefault(u => u.Email == email && u.Password == password);
+
+            _cinemaAppDbContext.UserCreds.Remove(userCredToDelete);
+
+            var userToDelete = _cinemaAppDbContext.Users.Include(u => u.UniqueDiscount).FirstOrDefault(u => u.Email == email);
+            _cinemaAppDbContext.Users.Remove(userToDelete);
+
+            _cinemaAppDbContext.SaveChanges();
+        }
+
         public override User GetEntityById(int id)
         {
             return _cinemaAppDbContext.Users.Include(u => u.UniqueDiscount).FirstOrDefault(u => u.Id == id);

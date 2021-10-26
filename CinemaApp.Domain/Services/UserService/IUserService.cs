@@ -17,5 +17,6 @@ namespace CinemaApp.Domain.Services.UserService
         void SubscribeNewsletter(string jwtToken);
         void UnsubscribeNewsletter(string jwtToken);
         bool ChangePassword(string currentPassword, string newPassword, string jwtToken);
+        public bool DeleteAccount(string password, string jwtToken);
     }
 }
