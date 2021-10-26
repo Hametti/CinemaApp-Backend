@@ -11,10 +11,11 @@ namespace CinemaApp.Domain.Services.UserService
 {
     public interface IUserService
     {
-        public void AddUser(UserCredDTO user);
+        public void AddUser(UserDataDTO user);
         UserDTO GetUserByToken(string token);
         WeeklyDiscountMovieDTO GetUserDiscount(string jwtToken);
         void SubscribeNewsletter(string jwtToken);
         void UnsubscribeNewsletter(string jwtToken);
+        bool ChangePassword(string currentPassword, string newPassword, string jwtToken);
     }
 }

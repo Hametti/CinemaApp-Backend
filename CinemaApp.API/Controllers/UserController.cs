@@ -3,6 +3,7 @@ using CinemaApp.Domain.Services.UserService;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -19,7 +20,7 @@ namespace CinemaApp.API.Controllers
         }
 
         [HttpPost("add")]
-        public IActionResult AddUser(UserCredDTO user)
+        public IActionResult AddUser(UserDataDTO user)
         {
            // _userService.AddUser(user);
             return Ok("Succeed. Now you can log in.");
@@ -51,6 +52,13 @@ namespace CinemaApp.API.Controllers
         {
             _userService.UnsubscribeNewsletter(JwtToken);
             return Ok("Newsletter unsubscribed");
+        }
+
+        [HttpPost("changepassword")]
+        public IActionResult IsPasswordCorrect([FromHeader]string currentPassword, [FromHeader]string newPassword, [FromHeader]string jwtToken)
+        {
+            var result = _userService.ChangePassword(currentPassword, newPassword, jwtToken);
+            return Ok(result);
         }
     }
 }

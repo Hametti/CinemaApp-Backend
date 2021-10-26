@@ -23,7 +23,7 @@ namespace CinemaApp.Domain.Services.UserService
             _movieService = movieService;
         }
 
-        public void AddUser(UserCredDTO user)
+        public void AddUser(UserDataDTO user)
         {
             //check for errors
             //convert DTO to user
@@ -75,6 +75,20 @@ namespace CinemaApp.Domain.Services.UserService
             };
 
             return weeklyDiscountToReturn;
+        }
+
+        public bool ChangePassword(string currentPassword, string newPassword, string jwtToken)
+        {
+            var JWTtoken = new JwtSecurityToken(jwtToken);
+            string email = JWTtoken.Claims.FirstOrDefault(c => c.Type == "unique_name").Value;
+
+            if (_userRepository.IsPasswordCorrect(email, currentPassword))
+            {
+                var result = _userRepository.ChangeUserPassword(email, currentPassword, newPassword);
+                return result;
+            }
+            else
+                return false;
         }
 
         public void SubscribeNewsletter(string jwtToken)

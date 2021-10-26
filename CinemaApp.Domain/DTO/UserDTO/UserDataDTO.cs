@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CinemaApp.Domain.DTO.UserDTO
 {
-    public class UserCredDTO
+    public class UserDataDTO
     {
         public string Email { get; set; }
         public string Password { get; set; }
