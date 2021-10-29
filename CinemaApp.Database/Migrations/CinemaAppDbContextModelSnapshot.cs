@@ -101,14 +101,14 @@ namespace CinemaApp.Database.Migrations
                     b.ToTable("ScreeningDays");
                 });
 
-            modelBuilder.Entity("CinemaApp.Database.Entities.MovieModels.WeeklyDiscountMovie", b =>
+            modelBuilder.Entity("CinemaApp.Database.Entities.MovieModels.WeeklyDiscount", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("WeeklyDiscountId")
+                    b.Property<int?>("WeeklyDiscountMovieId")
                         .HasColumnType("int");
 
                     b.Property<int>("WeeklyDiscountValue")
@@ -116,9 +116,9 @@ namespace CinemaApp.Database.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("WeeklyDiscountId");
+                    b.HasIndex("WeeklyDiscountMovieId");
 
-                    b.ToTable("WeeklyDiscountMovie");
+                    b.ToTable("WeeklyDiscount");
                 });
 
             modelBuilder.Entity("CinemaApp.Database.Entities.UserCred", b =>
@@ -261,13 +261,13 @@ namespace CinemaApp.Database.Migrations
                     b.Navigation("ScreeningDay");
                 });
 
-            modelBuilder.Entity("CinemaApp.Database.Entities.MovieModels.WeeklyDiscountMovie", b =>
+            modelBuilder.Entity("CinemaApp.Database.Entities.MovieModels.WeeklyDiscount", b =>
                 {
-                    b.HasOne("CinemaApp.Database.Entities.MovieModels.Movie", "WeeklyDiscount")
+                    b.HasOne("CinemaApp.Database.Entities.MovieModels.Movie", "WeeklyDiscountMovie")
                         .WithMany()
-                        .HasForeignKey("WeeklyDiscountId");
+                        .HasForeignKey("WeeklyDiscountMovieId");
 
-                    b.Navigation("WeeklyDiscount");
+                    b.Navigation("WeeklyDiscountMovie");
                 });
 
             modelBuilder.Entity("CinemaApp.Database.Entities.UserCred", b =>

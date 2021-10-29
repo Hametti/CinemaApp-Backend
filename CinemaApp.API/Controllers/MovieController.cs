@@ -1,5 +1,6 @@
 ﻿using CinemaApp.Database.Entities.MovieModels;
 using CinemaApp.Domain.DTO.UserDTO;
+using CinemaApp.Domain.Exceptions;
 using CinemaApp.Domain.Services.MovieService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -23,43 +24,110 @@ namespace CinemaApp.API.Controllers
         [HttpGet("all")]
         public IActionResult GetAllMovies()
         {
-            var movies = _movieService.GetAllMovies();
-            return Ok(movies);
+            try
+            {
+                var movies = _movieService.GetAllMovies();
+                return Ok(movies);
+            }
+            catch(ListIsEmptyException)
+            {
+                return BadRequest("There aren't any movies in the database");
+            }
+            catch(Exception e)
+            {
+                return BadRequest($"Something went wrong: {e.Message}");
+            }
         }
 
         [HttpGet("{id}")]
         public IActionResult GetMovieById(int id)
         {
-            var movie = _movieService.GetEntityById(id);
-            return Ok(movie);
+            try
+            {
+                var movie = _movieService.GetEntityById(id);
+                return Ok(movie);
+            }
+            catch(ItemDoesntExistException)
+            {
+                return BadRequest("Movie with given id doesn't exist");
+            }
+            catch(Exception e)
+            {
+                return BadRequest($"Something went wrong: {e.Message}");
+            }
         }
 
         [HttpGet("five")]
         public IActionResult GetFiveMovies()
         {
-            var movies = _movieService.GetFivemovies();
-            return Ok(movies);
+            try
+            {
+                var movies = _movieService.GetFivemovies();
+                return Ok(movies);
+            }
+            catch (ListIsEmptyException)
+            {
+                return BadRequest("There aren't any movies in the database");
+            }
+            catch (NotEnoughMoviesException)
+            {
+                return BadRequest("There aren't enough movies in the database");
+            }
+            catch(Exception e)
+            {
+                return BadRequest($"Something went wrong: {e.Message}");
+            }
         }
 
         [HttpGet("weeklydiscountmovie")]
         public IActionResult GetWeeklyDiscountMovie()
         {
-            var weeklyDiscount = _movieService.GetWeeklyDiscountMovie();
-            return Ok(weeklyDiscount);
+            try
+            {
+                var weeklyDiscount = _movieService.GetWeeklyDiscountMovie();
+                return Ok(weeklyDiscount);
+            }
+            catch(ListIsEmptyException)
+            {
+                return BadRequest("There aren't any movies in the database");
+            }
+            catch(Exception e)
+            {
+                return BadRequest($"Something went wrong: {e.Message}");
+            }
         }
 
+        //check for exceptions after implementing admin panel
         [HttpPost("add")]
         public IActionResult AddMovie([FromBody] Movie movie)
         {
-            _movieService.AddMovie(movie);
-            return Ok();
+            try
+            {
+                _movieService.AddMovie(movie);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return BadRequest($"Something went wrong: {e.Message}");
+            }
         }
 
         [HttpDelete("delete/{id}")]
         public IActionResult DeleteMovieById(int id)
         {
-            _movieService.DeleteMovieById(id);
-            return Ok();
+            try
+            {
+                _movieService.DeleteMovieById(id);
+                return Ok();
+            }
+            catch(ItemDoesntExistException)
+            {
+                return BadRequest("Movie with given id doesn't exist");
+            }
+            catch (Exception e)
+            {
+                return BadRequest($"Something went wrong: {e.Message}");
+            }
         }
     }
 }

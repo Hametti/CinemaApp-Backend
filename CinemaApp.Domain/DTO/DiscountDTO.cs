@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CinemaApp.Domain.DTO.UserDTO
+namespace CinemaApp.Domain.DTO
 {
-    public class WeeklyDiscountMovieDTO
+    public class DiscountDTO
     {
         public Movie DiscountMovie { get; set; }
         public int DiscountValue { get; set; }

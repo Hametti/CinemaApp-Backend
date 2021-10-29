@@ -1,6 +1,7 @@
 ﻿using CinemaApp.Auth.Classes;
 using CinemaApp.Auth.Interfaces;
 using CinemaApp.DAL.Repositories.Authentication;
+using CinemaApp.DAL.Repositories.UserRepository;
 using CinemaApp.Domain.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -19,10 +20,12 @@ namespace CinemaApp.API.Controllers
     {
         private readonly IJwtAuthenticationManager jwtAuthenticationManager;
         private readonly IAuthenticationRepository authenticationRepository;
-        public MainController(IJwtAuthenticationManager jwtAuthenticationManager, IAuthenticationRepository authenticationRepository)
+        private readonly IUserRepository userRepository;
+        public MainController(IJwtAuthenticationManager jwtAuthenticationManager, IAuthenticationRepository authenticationRepository, IUserRepository userRepository)
         {
             this.jwtAuthenticationManager = jwtAuthenticationManager;
             this.authenticationRepository = authenticationRepository;
+            this.userRepository = userRepository;
         }
 
         [HttpGet]
@@ -35,11 +38,17 @@ namespace CinemaApp.API.Controllers
         [HttpPost("authenticate")]
         public IActionResult Authenticate([FromBody] UserCred userCred)
         {
-            var userCredCorrect = authenticationRepository.CheckUserCreds(userCred.Username, userCred.Password);
+            var userCredCorrect = authenticationRepository.AreUserCredsCorrect(userCred.Email, userCred.Password);
 
             if (userCredCorrect)
             {
-                var token = jwtAuthenticationManager.Authenticate(userCred.Username, userCred.Password);
+                string role;
+                if (userRepository.GetUserByEmail(userCred.Email).IsAdmin)
+                    role = "admin";
+                else
+                    role = "user";
+
+                var token = jwtAuthenticationManager.Authenticate(userCred.Email, userCred.Password, role);
                 return Ok(token);
             }
 

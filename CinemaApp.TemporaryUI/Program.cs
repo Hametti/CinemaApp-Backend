@@ -27,7 +27,7 @@ namespace CinemaApp.TemporaryUI
             //DeleteScreeningDayById(1);
             //DeleteScreeningById(1);
             //DeleteReservationById(1);
-            DeleteUserByEmail("test1");
+            //DeleteUserByEmail("test1");
             //DeleteMovieById(2);
 
             //UpdateRecord();
@@ -40,12 +40,13 @@ namespace CinemaApp.TemporaryUI
             //DisplayScreeningDays();
             //DisplayMovies();
             //DisplayScreenings();
-            DisplayScreeningById(1);
-            DisplayReservations();
-            DisplaySeatsOfScreeningWithId(1);
+            //DisplayScreeningById(1);
+            //DisplayReservations();
+            //DisplaySeatsOfScreeningWithId(1);
             //DisplaySeats();
-            DisplayUsers();
+            //DisplayUsers();
 
+            var token = new JwtSecurityToken("asd");
 
 
             Console.WriteLine("\nSucceed");
@@ -197,10 +198,11 @@ namespace CinemaApp.TemporaryUI
             {
                 Email = "test1",
                 Name = "Jan",
+                UniqueDiscount = _context.Movies.ToList().OrderBy(o => Guid.NewGuid()).First(),
+                UniqueDiscountValue = new Random().Next(10, 60),
                 SecurityQuestion = "2+2?",
-                SecurityQuestionAnswer = "4",
-                UniqueDiscountValue = new Random().Next(10, 60)
-            };
+                SecurityQuestionAnswer = "4"
+        };
             
             var userCredsToAdd = new UserCred 
             { 
@@ -644,39 +646,6 @@ namespace CinemaApp.TemporaryUI
                 Console.WriteLine($"Movie Title: {movie.Title}");
                 Console.WriteLine("\n--------------------------------------------\n");
             }
-        }
-
-        private static void DisplayDailyViews()
-        {
-            //var dailyViews = _context.DailyViews.Include(v => v.MovieList).ThenInclude(s => s.ShowingHourList).ToList();
-
-            //foreach(DailyView dailyView in dailyViews)
-            //{
-            //    Console.WriteLine($"Daily view id: {dailyView.Id}");
-            //    Console.WriteLine($"Daily view date: {dailyView.Date}\n");
-
-            //    Console.WriteLine("DailyView movies:");
-            //    foreach(Movie movie in dailyView.MovieList)
-            //    {
-            //        Console.WriteLine($"Movie Id: {movie.Id}");
-            //        Console.WriteLine($"Movie Id: {movie.Id}\n");
-
-            //        Console.WriteLine("Movie showing hours: ");
-            //        foreach(ShowingHour showingHour in movie.ShowingHourList)
-            //        {
-            //            Console.WriteLine($"{showingHour.Hour} ");
-            //        }
-            //    }
-
-            //    Console.WriteLine("-----------------------------------------");
-            //    Console.WriteLine();
-            //}
-            
-        }
-
-        static void UpdateRecord()
-        {
-
         }
     }
 }

@@ -24,51 +24,76 @@ namespace CinemaApp.DAL.Repositories.UserRepository
             _cinemaAppDbContext.UserCreds.Add(userCred);
             _cinemaAppDbContext.SaveChanges();
         }
+        public User GetUserByEmail(string email)
+        {
+            var user = _cinemaAppDbContext.Users.Include(u => u.UniqueDiscount).FirstOrDefault(u => u.Email == email);
+            return user;
+        }
+        public IEnumerable<User> GetAllUsers()
+        {
+            var users = _cinemaAppDbContext.Users
+                .Include(u => u.UniqueDiscount)
+                .Include(u => u.Reservations)
+                .ThenInclude(r => r.ReservedSeats)
+                .ToList();
 
-        public bool ChangeUserPassword(string email, string currentPassword, string newPassword)
+            return users;
+        }
+
+        public void ChangePassword(string email, string currentPassword, string newPassword)
         {
             var user = _cinemaAppDbContext.UserCreds.FirstOrDefault(u => u.Email == email && u.Password == currentPassword);
-            if (user != null)
-            {
-                user.Password = newPassword;
-                _cinemaAppDbContext.SaveChanges();
-                return true;
-            }
-            else
-                return false;
+
+            user.Password = newPassword;
+            _cinemaAppDbContext.SaveChanges();
         }
 
         public void DeleteAccount(string email, string password)
         {
             var userCredToDelete = _cinemaAppDbContext.UserCreds
-                                   .Include(u => u.User)
-                                   .ThenInclude(u => u.UniqueDiscount)
-                                   .FirstOrDefault(u => u.Email == email && u.Password == password);
+                .FirstOrDefault(u => u.Email == email && u.Password == password);
+
+            var userToDelete = _cinemaAppDbContext.Users
+                .Include(u => u.Reservations)
+                .ThenInclude(u => u.ReservedSeats)
+                .FirstOrDefault(u => u.Email == email);
+
+            var reservations = userToDelete.Reservations.ToList();
+            if (reservations.Count > 0)
+                foreach (Reservation reservation in reservations)
+                {
+                    var screening = _cinemaAppDbContext.Screenings
+                        .Include(s => s.Seats)
+                        .FirstOrDefault(s => s.Id == reservation.ScreeningId);
+
+                    foreach (Seat seat in reservation.ReservedSeats)
+                        screening.Seats.FirstOrDefault(s => s.Id == seat.Id).IsOccupied = false;
+                }
 
             _cinemaAppDbContext.UserCreds.Remove(userCredToDelete);
-
-            var userToDelete = _cinemaAppDbContext.Users.Include(u => u.UniqueDiscount).FirstOrDefault(u => u.Email == email);
-            _cinemaAppDbContext.Users.Remove(userToDelete);
-
+            _cinemaAppDbContext.Remove(userToDelete);
             _cinemaAppDbContext.SaveChanges();
         }
 
+
+
         public override User GetEntityById(int id)
         {
-            return _cinemaAppDbContext.Users.Include(u => u.UniqueDiscount).FirstOrDefault(u => u.Id == id);
+            var user = _cinemaAppDbContext.Users
+                .Include(u => u.UniqueDiscount)
+                .FirstOrDefault(u => u.Id == id);
+
+            return user;
         }
 
-        public User GetUserByEmail(string email)
-        {
-            return _cinemaAppDbContext.Users.Include(u => u.UniqueDiscount).FirstOrDefault(u => u.Email == email);
-        }
+        
 
         public bool IsPasswordCorrect(string email, string password)
         {
             var userCredFromDb = _cinemaAppDbContext.UserCreds.FirstOrDefault(u => u.Email == email && u.Password == password);
+
             if (userCredFromDb == null)
                 return false;
-
             else
                 return true;
         }

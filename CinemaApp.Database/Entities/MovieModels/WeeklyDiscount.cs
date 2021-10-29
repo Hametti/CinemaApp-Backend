@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace CinemaApp.Database.Entities.MovieModels
 {
-    public class WeeklyDiscountMovie
+    public class WeeklyDiscount
     {
         public int Id { get; set; }
-        public Movie WeeklyDiscount { get; set; }
+        public Movie WeeklyDiscountMovie { get; set; }
         public int WeeklyDiscountValue { get; set; }
     }
 }

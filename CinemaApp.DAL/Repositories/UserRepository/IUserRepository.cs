@@ -12,11 +12,12 @@ namespace CinemaApp.DAL.Repositories.UserRepository
     public interface IUserRepository : IBaseRepository<User>
     {
         public void AddUser(User user, UserCred userCred);
-        User GetUserByEmail(string email);
-        void SubscribeNewsletter(User user);
-        void UnsubscribeNewsletter(User user);
-        bool IsPasswordCorrect(string email, string password);
-        bool ChangeUserPassword(string email, string currentPassword, string newPassword);
-        void DeleteAccount(string email, string password);
+        public User GetUserByEmail(string email);
+        public IEnumerable<User> GetAllUsers();
+        public void DeleteAccount(string email, string password);
+        public void ChangePassword(string email, string currentPassword, string newPassword);
+        public void SubscribeNewsletter(User user);
+        public void UnsubscribeNewsletter(User user);
+        public bool IsPasswordCorrect(string email, string password);
     }
 }

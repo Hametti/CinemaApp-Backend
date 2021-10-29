@@ -1,15 +1,14 @@
 ﻿using CinemaApp.DAL.Repositories.UserRepository;
 using CinemaApp.Database.Entities;
-using CinemaApp.Database.Entities.MovieModels;
 using CinemaApp.Database.Entities.UserModels;
+using CinemaApp.Domain.DTO;
 using CinemaApp.Domain.DTO.UserDTO;
+using CinemaApp.Domain.Exceptions;
 using CinemaApp.Domain.Services.MovieService;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CinemaApp.Domain.Services.UserService
 {
@@ -20,38 +19,65 @@ namespace CinemaApp.Domain.Services.UserService
         public UserService(IUserRepository userRepository, IMovieService movieService)
         {
             _userRepository = userRepository;
-            _movieService = movieService;
+            
         }
 
-        public void AddUser(UserDataDTO user)
+        public void AddUser(NewUserDTO userToAddDTO)
         {
-            //check for errors
-            //convert DTO to user
+            var user = _userRepository.GetUserByEmail(userToAddDTO.Email);
+            if (user != null)
+                throw new ItemAlreadyExistsException();
+
+            if (userToAddDTO.Password.Length < 8)
+                throw new TooShortPasswordException();
+
+            if (userToAddDTO.Password.Length > 128)
+                throw new TooLongPasswordException();
+
+            if (userToAddDTO.Name.Length < 2)
+                throw new TooShortNameException();
+
+            if (userToAddDTO.Name.Length > 100)
+                throw new TooLongNameException();
+
+            if (userToAddDTO.SecurityQuestion.Length < 3)
+                throw new TooShortSecurityQuestionException();
+
+            if (userToAddDTO.SecurityQuestion.Length > 100)
+                throw new TooLongSecurityQuestionException();
+
+            if (userToAddDTO.SecurityQuestionAnswer.Length < 3)
+                throw new TooShortSecurityQuestionAnswerException();
+
+            if (userToAddDTO.SecurityQuestionAnswer.Length > 100)
+                throw new TooLongSecurityQuestionAnswerException();
+
             var userToAdd = new User
             {
-                Email = user.Email,
-                Name = user.Name,
+                Email = userToAddDTO.Email,
+                Name = userToAddDTO.Name,
                 UniqueDiscount = _movieService.GetRandomMovie(),
-                SecurityQuestion = user.SecurityQuestion,
-                SecurityQuestionAnswer = user.SecurityQuestionAnswer
+                UniqueDiscountValue = new Random().Next(10, 60),
+                SecurityQuestion = userToAddDTO.SecurityQuestion,
+                SecurityQuestionAnswer = userToAddDTO.SecurityQuestionAnswer
             };
 
             var userCredToAdd = new UserCred
             {
-                Email = user.Email,
-                Password = user.Password,
+                Email = userToAddDTO.Email,
+                Password = userToAddDTO.Password,
                 User = userToAdd
             };
 
             _userRepository.AddUser(userToAdd, userCredToAdd);
         }
 
-        public UserDTO GetUserByToken(string token)
+        public UserDTO GetUserByToken(string jwtToken)
         {
-            if (token == "{}" || token == "" || token == null)
-                throw new ArgumentException();
-            
-            var JWTtoken = new JwtSecurityToken(token);
+            if (jwtToken == "{}" || jwtToken == "" || jwtToken == null)
+                throw new ItemDoesntExistException();
+
+            var JWTtoken = new JwtSecurityToken(jwtToken);
             string email = JWTtoken.Claims.FirstOrDefault(c => c.Type == "unique_name").Value;
             var user = _userRepository.GetUserByEmail(email);
             var userToReturn = new UserDTO
@@ -64,80 +90,98 @@ namespace CinemaApp.Domain.Services.UserService
 
             return userToReturn;
         }
+        public IEnumerable<User> GetAllUsers(string jwtToken)
+        {
+            var JWTtoken = new JwtSecurityToken(jwtToken);
+            var role = JWTtoken.Claims.FirstOrDefault(c => c.Type == "role").Value;
+            if (role != "admin")
+                throw new UnauthorizedAccessException();
 
-        public WeeklyDiscountMovieDTO GetUserDiscount(string jwtToken)
+            var users = _userRepository.GetAllUsers();
+            if (users == null)
+                throw new ListIsEmptyException();
+
+            return users;
+        }
+
+        public void DeleteAccount(string password, string jwtToken)
+        {
+            var authenticationResult = IsPasswordCorrect(password, jwtToken);
+            if (!authenticationResult)
+                throw new UnauthorizedAccessException();
+            
+            var email = GetEmailFromToken(jwtToken);
+            _userRepository.DeleteAccount(email, password);
+        }
+
+        public DiscountDTO GetUserDiscount(string jwtToken)
         {
             var JWTtoken = new JwtSecurityToken(jwtToken);
             string email = JWTtoken.Claims.FirstOrDefault(c => c.Type == "unique_name").Value;
-            var user = _userRepository.GetUserByEmail(email);
 
-            var weeklyDiscountToReturn = new WeeklyDiscountMovieDTO
+            var user = _userRepository.GetUserByEmail(email);
+            if (user == null)
+                throw new ItemDoesntExistException();
+
+            var weeklyDiscountToReturn = new DiscountDTO
             {
                 DiscountMovie = user.UniqueDiscount,
-                DiscountValue = 50
+                DiscountValue = user.UniqueDiscountValue
             };
 
             return weeklyDiscountToReturn;
         }
 
-        public bool ChangePassword(string currentPassword, string newPassword, string jwtToken)
-        {
-            var JWTtoken = new JwtSecurityToken(jwtToken);
-            string email = JWTtoken.Claims.FirstOrDefault(c => c.Type == "unique_name").Value;
-
-            if (_userRepository.IsPasswordCorrect(email, currentPassword))
-            {
-                var result = _userRepository.ChangeUserPassword(email, currentPassword, newPassword);
-                return result;
-            }
-            else
-                return false;
-        }
-
         public void SubscribeNewsletter(string jwtToken)
         {
-            //check for errors
             var JWTtoken = new JwtSecurityToken(jwtToken);
             string email = JWTtoken.Claims.FirstOrDefault(c => c.Type == "unique_name").Value;
+
             var user = _userRepository.GetUserByEmail(email);
+            if (user == null)
+                throw new ItemDoesntExistException();
 
             _userRepository.SubscribeNewsletter(user);
         }
 
         public void UnsubscribeNewsletter(string jwtToken)
         {
-            //check for errors
             var JWTtoken = new JwtSecurityToken(jwtToken);
             string email = JWTtoken.Claims.FirstOrDefault(c => c.Type == "unique_name").Value;
+
             var user = _userRepository.GetUserByEmail(email);
+            if (user == null)
+                throw new ItemDoesntExistException();
 
             _userRepository.UnsubscribeNewsletter(user);
         }
 
-        public bool DeleteAccount(string password, string jwtToken)
-        {
-            if (IsPasswordCorrect(password, jwtToken))
-            {
-                var email = GetEmailFromToken(jwtToken);
-                _userRepository.DeleteAccount(email, password);
-                return true;
-            }
-            else
-                return false;
-        }
-
-        public bool IsPasswordCorrect(string password, string jwtToken)
+        public void ChangePassword(string currentPassword, string newPassword, string jwtToken)
         {
             var JWTtoken = new JwtSecurityToken(jwtToken);
             string email = JWTtoken.Claims.FirstOrDefault(c => c.Type == "unique_name").Value;
 
+            var authenticationResult = IsPasswordCorrect(currentPassword, jwtToken);
+            if (!authenticationResult)
+                throw new UnauthorizedAccessException();
+
+            _userRepository.ChangePassword(email, currentPassword, newPassword);
+        }
+
+        private bool IsPasswordCorrect(string password, string jwtToken)
+        {
+            var JWTtoken = new JwtSecurityToken(jwtToken);
+            string email = JWTtoken.Claims.FirstOrDefault(c => c.Type == "unique_name").Value;
             var result = _userRepository.IsPasswordCorrect(email, password);
+
             return result;
         }
+
         private string GetEmailFromToken(string jwtToken)
         {
             var JWTtoken = new JwtSecurityToken(jwtToken);
             string email = JWTtoken.Claims.FirstOrDefault(c => c.Type == "unique_name").Value;
+
             return email;
         }
     }

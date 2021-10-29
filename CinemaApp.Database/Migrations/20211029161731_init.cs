@@ -68,20 +68,20 @@ namespace CinemaApp.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "WeeklyDiscountMovie",
+                name: "WeeklyDiscount",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    WeeklyDiscountId = table.Column<int>(type: "int", nullable: true),
+                    WeeklyDiscountMovieId = table.Column<int>(type: "int", nullable: true),
                     WeeklyDiscountValue = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_WeeklyDiscountMovie", x => x.Id);
+                    table.PrimaryKey("PK_WeeklyDiscount", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_WeeklyDiscountMovie_Movies_WeeklyDiscountId",
-                        column: x => x.WeeklyDiscountId,
+                        name: "FK_WeeklyDiscount_Movies_WeeklyDiscountMovieId",
+                        column: x => x.WeeklyDiscountMovieId,
                         principalTable: "Movies",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -234,9 +234,9 @@ namespace CinemaApp.Database.Migrations
                 column: "UniqueDiscountId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_WeeklyDiscountMovie_WeeklyDiscountId",
-                table: "WeeklyDiscountMovie",
-                column: "WeeklyDiscountId");
+                name: "IX_WeeklyDiscount_WeeklyDiscountMovieId",
+                table: "WeeklyDiscount",
+                column: "WeeklyDiscountMovieId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -248,7 +248,7 @@ namespace CinemaApp.Database.Migrations
                 name: "UserCreds");
 
             migrationBuilder.DropTable(
-                name: "WeeklyDiscountMovie");
+                name: "WeeklyDiscount");
 
             migrationBuilder.DropTable(
                 name: "Reservations");

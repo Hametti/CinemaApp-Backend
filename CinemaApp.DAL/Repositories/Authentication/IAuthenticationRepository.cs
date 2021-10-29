@@ -10,6 +10,6 @@ namespace CinemaApp.DAL.Repositories.Authentication
 {
     public interface IAuthenticationRepository
     {
-        public bool CheckUserCreds(string username, string password);
+        public bool AreUserCredsCorrect(string email, string password);
     }
 }

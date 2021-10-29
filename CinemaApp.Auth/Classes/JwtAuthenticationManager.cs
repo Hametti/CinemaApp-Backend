@@ -11,15 +11,13 @@ namespace CinemaApp.Auth.Classes
 {
     public class JwtAuthenticationManager : IJwtAuthenticationManager
     {
-        private readonly IDictionary<string, string> users = new Dictionary<string, string>
-        { { "test1", "password1" }, { "test2", "password2" } };
         private readonly string key;
         public JwtAuthenticationManager(string key)
         {
             this.key = key;
         }
 
-        public string Authenticate(string username, string password)
+        public string Authenticate(string email, string password, string role)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var tokenKey = Encoding.ASCII.GetBytes(key);
@@ -27,7 +25,8 @@ namespace CinemaApp.Auth.Classes
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim(ClaimTypes.Name, username)
+                    new Claim(ClaimTypes.Email, email),
+                    new Claim(ClaimTypes.Role, role)
                 }),
                 Expires = DateTime.UtcNow.AddHours(1),
                 SigningCredentials =

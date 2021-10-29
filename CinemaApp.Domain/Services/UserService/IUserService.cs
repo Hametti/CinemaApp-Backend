@@ -1,5 +1,6 @@
 ﻿using CinemaApp.Database.Entities.MovieModels;
 using CinemaApp.Database.Entities.UserModels;
+using CinemaApp.Domain.DTO;
 using CinemaApp.Domain.DTO.UserDTO;
 using System;
 using System.Collections.Generic;
@@ -11,12 +12,13 @@ namespace CinemaApp.Domain.Services.UserService
 {
     public interface IUserService
     {
-        public void AddUser(UserDataDTO user);
-        UserDTO GetUserByToken(string token);
-        WeeklyDiscountMovieDTO GetUserDiscount(string jwtToken);
-        void SubscribeNewsletter(string jwtToken);
-        void UnsubscribeNewsletter(string jwtToken);
-        bool ChangePassword(string currentPassword, string newPassword, string jwtToken);
-        public bool DeleteAccount(string password, string jwtToken);
+        public void AddUser(NewUserDTO user);
+        public UserDTO GetUserByToken(string jwtToken);
+        public IEnumerable<User> GetAllUsers(string jwtToken);
+        public void DeleteAccount(string password, string jwtToken);
+        public DiscountDTO GetUserDiscount(string jwtToken);
+        public void ChangePassword(string currentPassword, string newPassword, string jwtToken);
+        public void SubscribeNewsletter(string jwtToken);
+        public void UnsubscribeNewsletter(string jwtToken);
     }
 }

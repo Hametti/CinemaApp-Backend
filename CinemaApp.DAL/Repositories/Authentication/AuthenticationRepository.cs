@@ -15,11 +15,10 @@ namespace CinemaApp.DAL.Repositories.Authentication
         protected readonly CinemaAppDbContext _cinemaAppDbContext;
         public AuthenticationRepository(CinemaAppDbContext cinemaAppDbContext)
         {
-            cinemaAppDbContext.Database.EnsureCreated();
             _cinemaAppDbContext = cinemaAppDbContext;
         }
 
-        public bool CheckUserCreds(string username, string password)
+        public bool AreUserCredsCorrect(string email, string password)
         {
             if(_cinemaAppDbContext.UserCreds.ToList().Count == 0)
             {
@@ -30,7 +29,7 @@ namespace CinemaApp.DAL.Repositories.Authentication
                 _cinemaAppDbContext.SaveChanges();
             }
             var checksth = _cinemaAppDbContext.UserCreds.ToList();
-            var user = _cinemaAppDbContext.UserCreds.FirstOrDefault(u => u.Email == username && u.Password == password);
+            var user = _cinemaAppDbContext.UserCreds.FirstOrDefault(u => u.Email == email && u.Password == password);
             if (user != null)
                 return true;
             
