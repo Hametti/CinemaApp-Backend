@@ -1,5 +1,7 @@
 ﻿using CinemaApp.Database;
+using CinemaApp.Database.Entities;
 using CinemaApp.Database.Entities.MovieModels;
+using CinemaApp.Database.Entities.UserModels;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -13,25 +15,337 @@ namespace CinemaApp.TemporaryUI
         private static CinemaAppDbContext _context = new CinemaAppDbContext();
         static void Main(string[] args)
         {
-            var weeklyDiscount = _context.WeeklyDiscountMovie.Include(w => w.WeeklyDiscount).FirstOrDefault();
-            Console.WriteLine(weeklyDiscount.WeeklyDiscount.Title);
-            Console.WriteLine(weeklyDiscount.WeeklyDiscountValue);
             //AddSampleMovies();
+            //AddSampleScreeningDays();
+            //AddSampleUser();
+            //AddSampleReservationToUserWithEmail("test1", 1);
+            //AddSampleReservationToScreningWithId(19);
+            //AddRandomScreening()
+
+            //DeleteRecord();
+            //DeleteAllScreeningDays();
+            //DeleteScreeningDayById(1);
+            //DeleteScreeningById(1);
+            //DeleteReservationById(1);
+            DeleteUserByEmail("test1");
+            //DeleteMovieById(2);
+
             //UpdateRecord();
             //DeleteRecord();
 
-            //DisplayScreeningDays();
-            //AddSampleScreeningDays();
-            //DeleteRecord();
+            //AddSampleUser();
+            //DisplayUserCreds();
+            //GenerateSeats();
+
             //DisplayScreeningDays();
             //DisplayMovies();
+            //DisplayScreenings();
+            DisplayScreeningById(1);
+            DisplayReservations();
+            DisplaySeatsOfScreeningWithId(1);
+            //DisplaySeats();
+            DisplayUsers();
 
-            //string token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6InVzZXIxQGdtYWlsLmNvbSIsIm5iZiI6MTYzNTE3Nzk5NCwiZXhwIjoxNjM1MTgxNTk0LCJpYXQiOjE2MzUxNzc5OTR9.V_sU5i1UO6MViFDcYRPzEEYUjEsLoSzxj3uUg0CJBYs";
-            //var JWTtoken = new JwtSecurityToken(token);
-            //string email = JWTtoken.Claims.FirstOrDefault(c => c.Type == "unique_name").Value;
-            //Console.WriteLine(email);
+
+
             Console.WriteLine("\nSucceed");
             Console.ReadKey();
+        }
+
+        private static void DeleteScreeningDayById(int id)
+        {
+            var screenings = _context.Screenings.ToList();
+            var seats = _context.Seats.ToList();
+            var screeningDaysToDelete = _context.ScreeningDays
+                                        .Include(s => s.Screenings)
+                                        .Include(s => s.Screenings)
+                                        .ThenInclude(s => s.Seats)
+                                        .FirstOrDefault(s => s.Id == id);
+
+            _context.Remove(screeningDaysToDelete);
+            _context.SaveChanges();
+        }
+        private static void AddRandomScreening()
+        {
+            var screenings = _context.Screenings.ToList();
+            var screeningDay = _context.ScreeningDays.Include(s => s.Screenings).FirstOrDefault(s => s.Date == "25-10");
+            screeningDay.Screenings.Add(
+                new Screening
+                {
+                    Movie = _context.Movies.ToList().OrderBy(o => Guid.NewGuid()).First(),
+                    Hour = "15:00Dod1ane",
+                    Seats = GenerateSeats(),
+                });
+            _context.SaveChanges();
+        }
+
+        private static void DeleteMovieById(int  id)
+        {
+            var movie = _context.Movies.FirstOrDefault(m => m.Id == id);
+            var screenings = _context.Screenings
+                             .Include(s => s.Movie)
+                             .Include(s => s.Seats)
+                             .Include(s => s.Reservations)
+                             .Where(s => s.Movie.Id == id)
+                             .ToList();
+
+            _context.RemoveRange(screenings);
+            _context.Remove(movie);
+            _context.SaveChanges();
+        }
+
+        private static void DeleteUserByEmail(string email)
+        {
+            var user = _context.Users.Include(u => u.Reservations).ThenInclude(r => r.ReservedSeats).FirstOrDefault(u => u.Email == email);
+            var reservations = user.Reservations;
+            var screenings = _context.Screenings.Include(s => s.Seats).ToList();
+            if (reservations.Count > 0)
+                foreach(Reservation reservation in reservations)
+                {
+                    var screening = screenings.FirstOrDefault(s => s.Id == reservation.ScreeningId);
+
+                    foreach (Seat seat in reservation.ReservedSeats)
+                        screening.Seats.FirstOrDefault(s => s.Id == seat.Id).IsOccupied = false;
+                }
+
+            var userCredToDelete = _context.UserCreds
+                                   .Include(u => u.User)
+                                   .ThenInclude(u => u.UniqueDiscount)
+                                   .FirstOrDefault(u => u.Email == email);
+
+            _context.UserCreds.Remove(userCredToDelete);
+            _context.Remove(user);
+            _context.SaveChanges();
+        }
+
+        private static void AddSampleReservationToUserWithEmail(string email, int id)
+        {
+            var user = _context.Users.Include(u => u.Reservations).FirstOrDefault(u => u.Email == email);
+            var reservations = _context.Reservations.Include(r => r.ReservedSeats).ToList();
+
+            var screeningId = id;
+            var screening = _context.Screenings.Include(s => s.ScreeningDay)
+                            .Include(s => s.Movie)
+                            .Include(s => s.Seats)
+                            .FirstOrDefault(s => s.Id == screeningId);
+
+            var seat1 = screening.Seats.FirstOrDefault(s => s.Row == 1 && s.SeatNumber == 5);
+            var seat2 = screening.Seats.FirstOrDefault(s => s.Row == 1 && s.SeatNumber == 6);
+            var seat3 = screening.Seats.FirstOrDefault(s => s.Row == 2 && s.SeatNumber == 6);
+
+            //fields required to build reservation
+            var date = screening.ScreeningDay.Date;
+            var reservationHour = screening.Hour;
+            var movieTitle = screening.Movie.Title;
+            var seats = new List<Seat> { seat1, seat2, seat3 };
+
+            foreach (Seat seat in seats)
+                seat.IsOccupied = true;
+
+            var reservation = new Reservation
+            {
+                Date = date,
+                ReservationHour = reservationHour,
+                ScreeningId = screeningId,
+                MovieTitle = movieTitle,
+                ReservedSeats = seats
+            };
+
+            user.Reservations.Add(reservation);
+            _context.SaveChanges();
+        }
+
+        private static void DisplayUsers()
+        {
+            var users = _context.Users
+                        .Include(u => u.UniqueDiscount)
+                        .Include(u => u.Reservations)
+                        .ThenInclude(r => r.ReservedSeats)
+                        .ToList();
+
+            foreach(User user in users)
+            {
+                Console.WriteLine($"User id: {user.Id}");
+                Console.WriteLine($"User email: {user.Email}");
+                Console.WriteLine($"User admin role: {user.IsAdmin}");
+                Console.WriteLine($"User subscription: {user.Subscription}");
+                Console.WriteLine($"User UniqueDiscount: {user.UniqueDiscount}");
+                Console.WriteLine($"User sec question: {user.SecurityQuestion}");
+                Console.WriteLine($"User sec question answer: {user.SecurityQuestionAnswer}");
+                Console.WriteLine("Reservations: ");
+                foreach(Reservation reservation in user.Reservations)
+                {
+                    Console.WriteLine($"Reservation id: {reservation.Id}");
+                    Console.WriteLine($"Reservation date: {reservation.Date}");
+                    Console.WriteLine($"Reservation hour: {reservation.ReservationHour}");
+                    Console.WriteLine($"Reservation movie: {reservation.MovieTitle}");
+                    Console.WriteLine($"Reservation seats:");
+                    foreach(Seat seat in reservation.ReservedSeats)
+                    {
+                        Console.WriteLine($"Seat row: {seat.Row}");
+                        Console.WriteLine($"Seat nuber: {seat.SeatNumber}");
+                        Console.WriteLine($"Screening id: {seat.ScreeningId}");
+                    }
+                }
+                Console.WriteLine("\n-----------------------\n");
+            }
+        }
+
+        private static void AddSampleUser()
+        {
+            var userToAdd = new User
+            {
+                Email = "test1",
+                Name = "Jan",
+                SecurityQuestion = "2+2?",
+                SecurityQuestionAnswer = "4",
+                UniqueDiscountValue = new Random().Next(10, 60)
+            };
+            
+            var userCredsToAdd = new UserCred 
+            { 
+                Email = "test1",
+                Password = "password1",
+                User = userToAdd 
+            };
+
+            _context.Users.Add(userToAdd);
+            _context.UserCreds.Add(userCredsToAdd);
+            _context.SaveChanges();
+        }
+
+        private static void DeleteReservationById(int id)
+        {
+            var reservation = _context.Reservations.Include(r => r.ReservedSeats).FirstOrDefault(r => r.Id == id);
+            var seats = _context.Seats.ToList();
+            
+            foreach(Seat seat in reservation.ReservedSeats)
+            {
+                var seatToUpdate = _context.Seats.FirstOrDefault(s => s.Id == seat.Id);
+                seatToUpdate.IsOccupied = false;
+            }
+
+            _context.Remove(reservation);
+            _context.SaveChanges();
+        }
+
+        private static void DisplayReservations()
+        {
+            var reservations = _context.Reservations.Include(r => r.ReservedSeats).ToList();
+
+            foreach(Reservation reservation in reservations)
+            {
+                Console.WriteLine($"Reservation Id: {reservation.Id}");
+                Console.WriteLine($"Reservation date: {reservation.Date}");
+                Console.WriteLine($"Reservation hour: {reservation.ReservationHour}");
+                Console.WriteLine($"Reservation movie: {reservation.MovieTitle}");
+                Console.WriteLine("Seats:");
+                foreach (Seat seat in reservation.ReservedSeats)
+                    Console.WriteLine($"Seat row: {seat.Row}, seat number: {seat.SeatNumber}");
+                Console.WriteLine("\n");
+            }
+        }
+
+        private static void DisplayScreeningById(int id)
+        {
+            var screening = _context.Screenings.Include(s => s.ScreeningDay).Include(s => s.Movie).FirstOrDefault(s => s.Id == id);
+                Console.WriteLine($"Screening Id: {screening.Id}");
+                Console.WriteLine($"Screening day date: {screening.ScreeningDay.Date}");
+                Console.WriteLine($"Screening hour: {screening.Hour}\n");
+                Console.WriteLine($"Screening movie title: {screening.Movie.Title}\n");
+        }
+
+        private static void DeleteScreeningById(int id)
+        {
+            var screening = _context.Screenings.FirstOrDefault(s => s.Id == id);
+            var seats = _context.Seats.ToList();
+
+            _context.Remove(screening);
+            _context.SaveChanges();
+        }
+
+        private static void DisplaySeats()
+        {
+            var seats = _context.Seats.ToList().OrderBy(s => s.ScreeningId).ThenBy(s => s.Row).ThenBy(s => s.SeatNumber);
+            foreach(Seat seat in seats)
+                Console.WriteLine($"Seat Id: {seat.Id}, seat row: {seat.Row}, seat number: {seat.SeatNumber}, seat screening id: {seat.ScreeningId}");
+        }
+
+        private static void DisplaySeatsOfScreeningWithId(int id)
+        {
+            var seats = _context.Seats.Where(s => s.ScreeningId == id).ToList().OrderBy(s => s.Row).ThenBy(s => s.SeatNumber);
+            foreach (Seat seat in seats)
+                Console.WriteLine($"Id: {seat.Id}, Seat occupied: {seat.IsOccupied}, seat row: {seat.Row}, seat number: {seat.SeatNumber}, seat screening id: {seat.ScreeningId}");
+        }
+
+        private static void DisplayScreenings()
+        {
+            var screenings = _context.Screenings.Include(s => s.ScreeningDay).ToList();
+            Console.WriteLine("Screenings: ");
+            foreach (Screening screening in screenings)
+            {
+                Console.WriteLine($"Screening Id: {screening.Id}");
+                Console.WriteLine($"Screening day date: {screening.ScreeningDay.Date}");
+                Console.WriteLine($"Screening hour: {screening.Hour}\n");
+            }
+        }
+
+        private static void DeleteAllScreeningDays()
+        {
+            var screenings = _context.Screenings.ToList();
+            var seats = _context.Seats.ToList();
+            var screeningDaysToDelete = _context.ScreeningDays
+                                        .Include(s => s.Screenings)
+                                        .Include(s => s.Screenings)
+                                        .ThenInclude(s => s.Seats)
+                                        .ToList();
+
+            _context.RemoveRange(screeningDaysToDelete);
+            _context.SaveChanges();
+        }
+
+        private static void AddSampleReservationToScreningWithId(int id)
+        {
+            var screeningId = id;
+            var screening = _context.Screenings.Include(s => s.ScreeningDay)
+                            .Include(s => s.Movie)
+                            .Include(s => s.Seats)
+                            .FirstOrDefault(s => s.Id == screeningId);
+
+            var seat1 = screening.Seats.FirstOrDefault(s => s.Row == 1 && s.SeatNumber == 5);
+            var seat2 = screening.Seats.FirstOrDefault(s => s.Row == 1 && s.SeatNumber == 6);
+            var seat3 = screening.Seats.FirstOrDefault(s => s.Row == 2 && s.SeatNumber == 6);
+
+            //fields required to build reservation
+            var date = screening.ScreeningDay.Date;
+            var reservationHour = screening.Hour;
+            var movieTitle = screening.Movie.Title;
+            var seats = new List<Seat> { seat1, seat2, seat3 };
+
+            foreach (Seat seat in seats)
+                seat.IsOccupied = true;
+
+            var reservation = new Reservation
+            {
+                Date = date,
+                ReservationHour = reservationHour,
+                ScreeningId = screeningId,
+                MovieTitle = movieTitle,
+                ReservedSeats = seats
+            };
+
+            _context.Reservations.Add(reservation);
+            _context.SaveChanges();
+        }
+
+        private static void DisplayUserCreds()
+        {
+            var users = _context.UserCreds.ToList();
+            foreach(UserCred user in users)
+            {
+                Console.WriteLine($"Email: {user.Email}");
+                Console.WriteLine($"Password: {user.Password}");
+            }
         }
 
         private static void DeleteRecord()
@@ -39,8 +353,7 @@ namespace CinemaApp.TemporaryUI
             var screeningDays = _context.ScreeningDays
                 .Include(s => s.Screenings)
                 .ThenInclude(s => s.Movie)
-                .Include(s => s.Screenings)
-                .ThenInclude(s => s.ScreeningHours);
+                .Include(s => s.Screenings);
 
             _context.ScreeningDays.RemoveRange(screeningDays);
 
@@ -59,7 +372,6 @@ namespace CinemaApp.TemporaryUI
             //    if (screening.Movie.Id == movie.Id)
             //        screeningsToDelete.Add(screening);
             //}
-
             //_context.Screenings.RemoveRange(screeningsToDelete);
 
             //_context.Movies.Remove(movie);
@@ -72,7 +384,8 @@ namespace CinemaApp.TemporaryUI
                                 .Include(s => s.Screenings)
                                 .ThenInclude(s => s.Movie)
                                 .Include(s => s.Screenings)
-                                .ThenInclude(s => s.ScreeningHours)
+                                .Include(s => s.Screenings)
+                                .ThenInclude(s => s.Seats.OrderBy(s => s.Row).ThenBy(s => s.SeatNumber))
                                 .ToList();
 
             foreach (ScreeningDay screeningDay in screeningDays)
@@ -85,13 +398,41 @@ namespace CinemaApp.TemporaryUI
                     Console.WriteLine($"Screening Id: {screening.Id}");
                     Console.WriteLine($"Screening Movie Id: {screening.Movie.Id}");
                     Console.WriteLine($"Screening Movie Title: {screening.Movie.Title}");
-                    Console.WriteLine("\nScreening Hours:\n");
-                    foreach (ScreeningHour screeningHour in screening.ScreeningHours)
-                        Console.WriteLine($"Id: {screeningHour.Id}, Hour: {screeningHour.Hour} ");
+                    Console.WriteLine("\nScreening seats:\n");
+                    //foreach (Seat seat in screening.Seats)
+                    //    Console.WriteLine($"Id: {seat.Id}, Row: {seat.Row}, Number: {seat.SeatNumber}");
+                    Console.WriteLine($"\nScreening hour: {screening.Hour}");
                     Console.WriteLine("\n-----\n");
                 }
                 Console.WriteLine("\n-----------------------------------------\n");
             }
+        }
+
+        private static List<Seat> GenerateSeats()
+        {
+            var seats = new List<Seat>();
+            
+            for(int i=0; i<8; i++)
+                for(int j=0; j<10; j++)
+                {
+                    seats.Add(
+                        new Seat
+                        {
+                            Row = i + 1,
+                            SeatNumber = j + 1
+                        });
+                }
+
+            for(int i=8; i<10; i++)
+                for(int j=0; j<14; j++)
+                    seats.Add(
+                        new Seat
+                        {
+                            Row = i + 1,
+                            SeatNumber = j + 1
+                        });
+
+            return seats;
         }
 
         private static void AddSampleScreeningDays()
@@ -108,12 +449,26 @@ namespace CinemaApp.TemporaryUI
                         new Screening
                         {
                             Movie = movies.FirstOrDefault(m => m.Title == "No Time To Die"),
-                            ScreeningHours = new List<ScreeningHour> { new ScreeningHour { Hour = "12:00" }, new ScreeningHour { Hour = "17:45" }, new ScreeningHour { Hour = "21:00" } }
+                            Hour = "12:00",
+                            Seats = GenerateSeats()
+                        },
+                        new Screening
+                        {
+                            Movie = movies.FirstOrDefault(m => m.Title == "No Time To Die"),
+                            Hour = "17:45",
+                            Seats = GenerateSeats()
+                        },
+                        new Screening
+                        {
+                            Movie = movies.FirstOrDefault(m => m.Title == "No Time To Die"),
+                            Hour = "21:00",
+                            Seats = GenerateSeats()
                         },
                         new Screening
                         {
                             Movie = movies.FirstOrDefault(m => m.Title == "Suicide Squad"),
-                            ScreeningHours = new List<ScreeningHour> { new ScreeningHour { Hour = "15:00" } }
+                            Hour = "15:00",
+                            Seats = GenerateSeats()
                         }
                     }
                 },
@@ -125,17 +480,26 @@ namespace CinemaApp.TemporaryUI
                         new Screening
                         {
                             Movie = movies.FirstOrDefault(m => m.Title == "Inception"),
-                            ScreeningHours = new List<ScreeningHour> { new ScreeningHour { Hour = "12:00" } }
+                            Hour = "12:00",
+                            Seats = GenerateSeats()
                         },
                         new Screening
                         {
                             Movie = movies.FirstOrDefault(m => m.Title == "Green Mile"),
-                            ScreeningHours = new List<ScreeningHour> { new ScreeningHour { Hour = "18:30" } }
+                            Hour = "18:30",
+                            Seats = GenerateSeats()
                         },
                         new Screening
                         {
                             Movie = movies.FirstOrDefault(m => m.Title == "Interstellar"),
-                            ScreeningHours = new List<ScreeningHour> { new ScreeningHour { Hour = "15:00" }, new ScreeningHour { Hour = "21:00" } }
+                            Hour = "15:00",
+                            Seats = GenerateSeats()
+                        },
+                        new Screening
+                        {
+                            Movie = movies.FirstOrDefault(m => m.Title == "Interstellar"),
+                            Hour = "21:00",
+                            Seats = GenerateSeats()
                         }
                     }
                 },
@@ -147,17 +511,26 @@ namespace CinemaApp.TemporaryUI
                         new Screening
                         {
                             Movie = movies.FirstOrDefault(m => m.Title == "No Time To Die"),
-                            ScreeningHours = new List<ScreeningHour> { new ScreeningHour { Hour = "15:30" }, new ScreeningHour { Hour = "21:15" } }
+                            Hour = "15:30",
+                            Seats = GenerateSeats()
+                        },
+                        new Screening
+                        {
+                            Movie = movies.FirstOrDefault(m => m.Title == "No Time To Die"),
+                            Hour = "21:15",
+                            Seats = GenerateSeats()
                         },
                         new Screening
                         {
                             Movie = movies.FirstOrDefault(m => m.Title == "Interstellar"),
-                            ScreeningHours = new List<ScreeningHour> { new ScreeningHour { Hour = "12:00" } }
+                            Hour = "12:00",
+                            Seats = GenerateSeats()
                         },
                         new Screening
                         {
                             Movie = movies.FirstOrDefault(m => m.Title == "Suicide Squad"),
-                            ScreeningHours = new List<ScreeningHour> { new ScreeningHour { Hour = "18:45" } }
+                            Hour = "18:45",
+                            Seats = GenerateSeats()
                         }
                     }
                 }

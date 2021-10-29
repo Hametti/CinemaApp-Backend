@@ -11,8 +11,11 @@ namespace CinemaApp.Database.Entities.UserModels
     {
         public int Id { get; set; }
         public string Date { get; set; }
-        public Screening Screening { get; set; }
+        public string ReservationHour { get; set; }
         public int ScreeningId { get; set; }
+        public string MovieTitle { get; set; }
         public List<Seat> ReservedSeats { get; set; }
+        public int UserId { get; set; }
+        public User User { get; set; }
     }
 }

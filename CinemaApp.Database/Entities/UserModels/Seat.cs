@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CinemaApp.Database.Entities.MovieModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,6 +12,8 @@ namespace CinemaApp.Database.Entities.UserModels
         public int Id { get; set; }
         public int Row { get; set; }
         public int SeatNumber { get; set; }
-        public bool IsOccupied { get; set; }
+        public bool IsOccupied { get; set; } = false;
+        public int ScreeningId { get; set; }
+        public Screening Screening { get; set; }
     }
 }

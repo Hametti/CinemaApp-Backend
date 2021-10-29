@@ -27,7 +27,6 @@ namespace CinemaApp.DAL.Repositories.ScreeningDayRepository
         {
             var screeningDayToDelete = _cinemaAppDbContext.ScreeningDays
                                        .Include(s => s.Screenings)
-                                       .ThenInclude(s => s.ScreeningHours)
                                        .FirstOrDefault(s => s.Id == id);
 
             _cinemaAppDbContext.ScreeningDays.Remove(screeningDayToDelete);
@@ -40,7 +39,6 @@ namespace CinemaApp.DAL.Repositories.ScreeningDayRepository
                                 .Include(s => s.Screenings)
                                 .ThenInclude(s => s.Movie)
                                 .Include(s => s.Screenings)
-                                .ThenInclude(s => s.ScreeningHours.OrderBy(h => h.Hour))
                                 .ToList();
 
             return screeningDays;
@@ -52,7 +50,6 @@ namespace CinemaApp.DAL.Repositories.ScreeningDayRepository
                                 .Include(s => s.Screenings)
                                 .ThenInclude(s => s.Movie)
                                 .Include(s => s.Screenings)
-                                .ThenInclude(s => s.ScreeningHours)
                                 .FirstOrDefault(s => s.Id == id);
 
             return screeningDay;

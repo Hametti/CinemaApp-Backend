@@ -59,7 +59,7 @@ namespace CinemaApp.Domain.Services.ScreeningDayService
                             new ScreeningDTO
                             {
                                 Id = screening.Id,
-                                ScreeningHours = screening.ScreeningHours,
+                                Hour = screening.Hour,
                                 Movie = new MovieDTO
                                 {
                                     Id = screening.Movie.Id,
@@ -67,7 +67,7 @@ namespace CinemaApp.Domain.Services.ScreeningDayService
                                     Title = screening.Movie.Title
                                 }
                             }
-                        );
+                        );;
                 }
             }
 

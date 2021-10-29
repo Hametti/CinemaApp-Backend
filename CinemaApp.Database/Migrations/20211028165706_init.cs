@@ -52,6 +52,7 @@ namespace CinemaApp.Database.Migrations
                     IsAdmin = table.Column<bool>(type: "bit", nullable: false),
                     Subscription = table.Column<bool>(type: "bit", nullable: false),
                     UniqueDiscountId = table.Column<int>(type: "int", nullable: true),
+                    UniqueDiscountValue = table.Column<int>(type: "int", nullable: false),
                     SecurityQuestion = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     SecurityQuestionAnswer = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
@@ -93,7 +94,8 @@ namespace CinemaApp.Database.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     MovieId = table.Column<int>(type: "int", nullable: true),
-                    ScreeningDayId = table.Column<int>(type: "int", nullable: true)
+                    Hour = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ScreeningDayId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -140,7 +142,10 @@ namespace CinemaApp.Database.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Date = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ScreeningId = table.Column<int>(type: "int", nullable: false)
+                    ReservationHour = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ScreeningId = table.Column<int>(type: "int", nullable: false),
+                    MovieTitle = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UserId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -151,24 +156,10 @@ namespace CinemaApp.Database.Migrations
                         principalTable: "Screenings",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ScreeningHours",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Hour = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ScreeningId = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ScreeningHours", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ScreeningHours_Screenings_ScreeningId",
-                        column: x => x.ScreeningId,
-                        principalTable: "Screenings",
+                        name: "FK_Reservations_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -182,8 +173,8 @@ namespace CinemaApp.Database.Migrations
                     Row = table.Column<int>(type: "int", nullable: false),
                     SeatNumber = table.Column<int>(type: "int", nullable: false),
                     IsOccupied = table.Column<bool>(type: "bit", nullable: false),
-                    ReservationId = table.Column<int>(type: "int", nullable: true),
-                    ScreeningId = table.Column<int>(type: "int", nullable: true)
+                    ScreeningId = table.Column<int>(type: "int", nullable: false),
+                    ReservationId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -199,7 +190,7 @@ namespace CinemaApp.Database.Migrations
                         column: x => x.ScreeningId,
                         principalTable: "Screenings",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -208,9 +199,9 @@ namespace CinemaApp.Database.Migrations
                 column: "ScreeningId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ScreeningHours_ScreeningId",
-                table: "ScreeningHours",
-                column: "ScreeningId");
+                name: "IX_Reservations_UserId",
+                table: "Reservations",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Screenings_MovieId",
@@ -251,9 +242,6 @@ namespace CinemaApp.Database.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "ScreeningHours");
-
-            migrationBuilder.DropTable(
                 name: "Seats");
 
             migrationBuilder.DropTable(
@@ -266,16 +254,16 @@ namespace CinemaApp.Database.Migrations
                 name: "Reservations");
 
             migrationBuilder.DropTable(
-                name: "Users");
-
-            migrationBuilder.DropTable(
                 name: "Screenings");
 
             migrationBuilder.DropTable(
-                name: "Movies");
+                name: "Users");
 
             migrationBuilder.DropTable(
                 name: "ScreeningDays");
+
+            migrationBuilder.DropTable(
+                name: "Movies");
         }
     }
 }

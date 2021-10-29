@@ -11,7 +11,10 @@ namespace CinemaApp.Database.Entities.MovieModels
     {
         public int Id { get; set; }
         public Movie Movie { get; set; }
-        public List<ScreeningHour> ScreeningHours { get; set; } = new List<ScreeningHour>();
+        public string Hour { get; set; }
         public List<Seat> Seats { get; set; } = new List<Seat>();
+        public int ScreeningDayId { get; set; }
+        public ScreeningDay ScreeningDay { get; set; }
+        public List<Reservation> Reservations { get; set; } = new List<Reservation>();
     }
 }

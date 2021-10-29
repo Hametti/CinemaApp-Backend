@@ -26,7 +26,6 @@ namespace CinemaApp.DAL.Repositories.ScreeningRepository
         public void DeleteScreeningById(int id)
         {
             var screeningToDelete = _cinemaAppDbContext.Screenings
-                .Include(s => s.ScreeningHours)
                 .FirstOrDefault(s => s.Id == id);
 
             _cinemaAppDbContext.Screenings.Remove(screeningToDelete);
@@ -37,7 +36,6 @@ namespace CinemaApp.DAL.Repositories.ScreeningRepository
         {
             var screenings = _cinemaAppDbContext.Screenings
                 .Include(s => s.Movie)
-                .Include(s => s.ScreeningHours)
                 .ToList();
 
             return screenings;
@@ -47,7 +45,6 @@ namespace CinemaApp.DAL.Repositories.ScreeningRepository
         {
             var screening = _cinemaAppDbContext.Screenings
                 .Include(s => s.Movie)
-                .Include(s => s.ScreeningHours)
                 .FirstOrDefault(s => s.Id == id);
 
             return screening;

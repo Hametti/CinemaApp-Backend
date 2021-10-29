@@ -11,6 +11,6 @@ namespace CinemaApp.Domain.DTO.ScreeningDayDTOModels
     {
         public int Id { get; set; }
         public MovieDTO Movie { get; set; }
-        public List<ScreeningHour> ScreeningHours { get; set; } = new List<ScreeningHour>();
+        public string Hour { get; set; }
     }
 }

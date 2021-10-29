@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CinemaApp.Database.Migrations
 {
     [DbContext(typeof(CinemaAppDbContext))]
-    [Migration("20211026211406_init")]
+    [Migration("20211028165706_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -70,10 +70,13 @@ namespace CinemaApp.Database.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("Hour")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int?>("MovieId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ScreeningDayId")
+                    b.Property<int>("ScreeningDayId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -98,26 +101,6 @@ namespace CinemaApp.Database.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ScreeningDays");
-                });
-
-            modelBuilder.Entity("CinemaApp.Database.Entities.MovieModels.ScreeningHour", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Hour")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("ScreeningId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ScreeningId");
-
-                    b.ToTable("ScreeningHours");
                 });
 
             modelBuilder.Entity("CinemaApp.Database.Entities.MovieModels.WeeklyDiscountMovie", b =>
@@ -173,12 +156,23 @@ namespace CinemaApp.Database.Migrations
                     b.Property<string>("Date")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("MovieTitle")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ReservationHour")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("ScreeningId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ScreeningId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Reservations");
                 });
@@ -199,7 +193,7 @@ namespace CinemaApp.Database.Migrations
                     b.Property<int>("Row")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ScreeningId")
+                    b.Property<int>("ScreeningId")
                         .HasColumnType("int");
 
                     b.Property<int>("SeatNumber")
@@ -242,6 +236,9 @@ namespace CinemaApp.Database.Migrations
                     b.Property<int?>("UniqueDiscountId")
                         .HasColumnType("int");
 
+                    b.Property<int>("UniqueDiscountValue")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("UniqueDiscountId");
@@ -255,18 +252,15 @@ namespace CinemaApp.Database.Migrations
                         .WithMany()
                         .HasForeignKey("MovieId");
 
-                    b.HasOne("CinemaApp.Database.Entities.MovieModels.ScreeningDay", null)
+                    b.HasOne("CinemaApp.Database.Entities.MovieModels.ScreeningDay", "ScreeningDay")
                         .WithMany("Screenings")
-                        .HasForeignKey("ScreeningDayId");
+                        .HasForeignKey("ScreeningDayId")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
 
                     b.Navigation("Movie");
-                });
 
-            modelBuilder.Entity("CinemaApp.Database.Entities.MovieModels.ScreeningHour", b =>
-                {
-                    b.HasOne("CinemaApp.Database.Entities.MovieModels.Screening", null)
-                        .WithMany("ScreeningHours")
-                        .HasForeignKey("ScreeningId");
+                    b.Navigation("ScreeningDay");
                 });
 
             modelBuilder.Entity("CinemaApp.Database.Entities.MovieModels.WeeklyDiscountMovie", b =>
@@ -289,13 +283,19 @@ namespace CinemaApp.Database.Migrations
 
             modelBuilder.Entity("CinemaApp.Database.Entities.UserModels.Reservation", b =>
                 {
-                    b.HasOne("CinemaApp.Database.Entities.MovieModels.Screening", "Screening")
-                        .WithMany()
+                    b.HasOne("CinemaApp.Database.Entities.MovieModels.Screening", null)
+                        .WithMany("Reservations")
                         .HasForeignKey("ScreeningId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Screening");
+                    b.HasOne("CinemaApp.Database.Entities.UserModels.User", "User")
+                        .WithMany("Reservations")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("CinemaApp.Database.Entities.UserModels.Seat", b =>
@@ -304,9 +304,13 @@ namespace CinemaApp.Database.Migrations
                         .WithMany("ReservedSeats")
                         .HasForeignKey("ReservationId");
 
-                    b.HasOne("CinemaApp.Database.Entities.MovieModels.Screening", null)
+                    b.HasOne("CinemaApp.Database.Entities.MovieModels.Screening", "Screening")
                         .WithMany("Seats")
-                        .HasForeignKey("ScreeningId");
+                        .HasForeignKey("ScreeningId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Screening");
                 });
 
             modelBuilder.Entity("CinemaApp.Database.Entities.UserModels.User", b =>
@@ -320,7 +324,7 @@ namespace CinemaApp.Database.Migrations
 
             modelBuilder.Entity("CinemaApp.Database.Entities.MovieModels.Screening", b =>
                 {
-                    b.Navigation("ScreeningHours");
+                    b.Navigation("Reservations");
 
                     b.Navigation("Seats");
                 });
@@ -333,6 +337,11 @@ namespace CinemaApp.Database.Migrations
             modelBuilder.Entity("CinemaApp.Database.Entities.UserModels.Reservation", b =>
                 {
                     b.Navigation("ReservedSeats");
+                });
+
+            modelBuilder.Entity("CinemaApp.Database.Entities.UserModels.User", b =>
+                {
+                    b.Navigation("Reservations");
                 });
 #pragma warning restore 612, 618
         }

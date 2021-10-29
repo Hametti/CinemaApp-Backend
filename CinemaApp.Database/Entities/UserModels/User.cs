@@ -14,8 +14,10 @@ namespace CinemaApp.Database.Entities.UserModels
         public string Name { get; set; }
         public bool IsAdmin { get; set; } = false;
         public bool Subscription { get; set; } = false;
-        public Movie UniqueDiscount { get; set; }
+        public Movie UniqueDiscount { get; set; } = null;
+        public int UniqueDiscountValue { get; set; }
         public string SecurityQuestion { get; set; }
         public string SecurityQuestionAnswer { get; set; }
+        public List<Reservation> Reservations { get; set; } = new List<Reservation>();
     }
 }
