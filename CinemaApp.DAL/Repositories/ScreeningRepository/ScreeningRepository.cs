@@ -16,6 +16,25 @@ namespace CinemaApp.DAL.Repositories.ScreeningRepository
         {
 
         }
+        public override Screening GetEntityById(int id)
+        {
+            var screening = _cinemaAppDbContext.Screenings
+                .Include(s => s.Movie)
+                .Include(s => s.Seats)
+                .FirstOrDefault(s => s.Id == id);
+
+            return screening;
+        }
+
+        public IEnumerable<Screening> GetAllScreenings()
+        {
+            var screenings = _cinemaAppDbContext.Screenings
+                .Include(s => s.Movie)
+                .Include(s => s.Seats)
+                .ToList();
+
+            return screenings;
+        }
 
         public void AddScreening(Screening screening)
         {
@@ -30,24 +49,6 @@ namespace CinemaApp.DAL.Repositories.ScreeningRepository
 
             _cinemaAppDbContext.Screenings.Remove(screeningToDelete);
             _cinemaAppDbContext.SaveChanges();
-        }
-
-        public IEnumerable<Screening> GetAllScreenings()
-        {
-            var screenings = _cinemaAppDbContext.Screenings
-                .Include(s => s.Movie)
-                .ToList();
-
-            return screenings;
-        }
-
-        public override Screening GetEntityById(int id)
-        {
-            var screening = _cinemaAppDbContext.Screenings
-                .Include(s => s.Movie)
-                .FirstOrDefault(s => s.Id == id);
-
-            return screening;
         }
     }
 }

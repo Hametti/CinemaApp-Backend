@@ -1,4 +1,5 @@
 ﻿using CinemaApp.Database.Entities.MovieModels;
+using CinemaApp.Domain.Exceptions;
 using CinemaApp.Domain.Services.ScreeningService;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -18,32 +19,84 @@ namespace CinemaApp.API.Controllers
             _screeningService = screeningService;
         }
 
+        [HttpPost("add")]
+        public IActionResult AddScreening([FromBody] Screening screening)
+        {
+            try
+            {
+                _screeningService.AddScreening(screening);
+                return Ok();
+            }
+            catch(ItemAlreadyExistsException)
+            {
+                return BadRequest("Screening with same date and hour already exists");
+            }
+            catch(ItemDoesntExistException)
+            {
+                return BadRequest("Given movie isn't correct");
+            }
+            catch(ArgumentException)
+            {
+                return BadRequest("Given hour is incorrect. Try something like this \"12:00\"");
+            }
+            catch(Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
         [HttpGet("all")]
         public IActionResult GetAllScreenings()
         {
-            var screenings = _screeningService.GetAllScreenings();
-            return Ok(screenings);
-        }
-
-        [HttpGet("{id}")]
-        public IActionResult GetScreeningById(int id)
-        {
-            var screening = _screeningService.GetEntityById(id);
-            return Ok(screening);
-        }
-
-        [HttpPost("add")]
-        public IActionResult AddScreening([FromBody]Screening screening)
-        {
-            _screeningService.AddScreening(screening);
-            return Ok();
+            try
+            {
+                var screenings = _screeningService.GetAllScreenings();
+                return Ok(screenings);
+            }
+            catch(ListIsEmptyException)
+            {
+                return BadRequest("There aren't any screenings in database");
+            }
+            catch(Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         [HttpDelete("delete/{id}")]
         public IActionResult DeleteScreeningById(int id)
         {
-            _screeningService.DeleteScreeningById(id);
-            return Ok();
+            try
+            {
+                _screeningService.DeleteScreeningById(id);
+                return Ok();
+            }
+            catch(ItemDoesntExistException)
+            {
+                return BadRequest("Screening with given id doesn't exist");
+            }
+            catch(Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpGet("{id}")]
+        public IActionResult GetScreeningById(int id)
+        {
+            try
+            {
+                var screening = _screeningService.GetEntityById(id);
+                return Ok(screening);
+            }
+            catch(ItemDoesntExistException)
+            {
+                return BadRequest("Screening with given id doesn't exist");
+            }
+            catch(Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
     }
 }
