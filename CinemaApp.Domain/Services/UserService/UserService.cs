@@ -19,7 +19,7 @@ namespace CinemaApp.Domain.Services.UserService
         public UserService(IUserRepository userRepository, IMovieService movieService)
         {
             _userRepository = userRepository;
-            
+            _movieService = movieService;
         }
 
         public void AddUser(NewUserDTO userToAddDTO)
@@ -78,7 +78,7 @@ namespace CinemaApp.Domain.Services.UserService
                 throw new ItemDoesntExistException();
 
             var JWTtoken = new JwtSecurityToken(jwtToken);
-            string email = JWTtoken.Claims.FirstOrDefault(c => c.Type == "unique_name").Value;
+            string email = JWTtoken.Claims.FirstOrDefault(c => c.Type == "email").Value;
             var user = _userRepository.GetUserByEmail(email);
             var userToReturn = new UserDTO
             {
@@ -117,7 +117,7 @@ namespace CinemaApp.Domain.Services.UserService
         public DiscountDTO GetUserDiscount(string jwtToken)
         {
             var JWTtoken = new JwtSecurityToken(jwtToken);
-            string email = JWTtoken.Claims.FirstOrDefault(c => c.Type == "unique_name").Value;
+            string email = JWTtoken.Claims.FirstOrDefault(c => c.Type == "email").Value;
 
             var user = _userRepository.GetUserByEmail(email);
             if (user == null)
@@ -135,7 +135,7 @@ namespace CinemaApp.Domain.Services.UserService
         public void SubscribeNewsletter(string jwtToken)
         {
             var JWTtoken = new JwtSecurityToken(jwtToken);
-            string email = JWTtoken.Claims.FirstOrDefault(c => c.Type == "unique_name").Value;
+            string email = JWTtoken.Claims.FirstOrDefault(c => c.Type == "email").Value;
 
             var user = _userRepository.GetUserByEmail(email);
             if (user == null)
@@ -147,7 +147,7 @@ namespace CinemaApp.Domain.Services.UserService
         public void UnsubscribeNewsletter(string jwtToken)
         {
             var JWTtoken = new JwtSecurityToken(jwtToken);
-            string email = JWTtoken.Claims.FirstOrDefault(c => c.Type == "unique_name").Value;
+            string email = JWTtoken.Claims.FirstOrDefault(c => c.Type == "email").Value;
 
             var user = _userRepository.GetUserByEmail(email);
             if (user == null)
@@ -159,7 +159,7 @@ namespace CinemaApp.Domain.Services.UserService
         public void ChangePassword(string currentPassword, string newPassword, string jwtToken)
         {
             var JWTtoken = new JwtSecurityToken(jwtToken);
-            string email = JWTtoken.Claims.FirstOrDefault(c => c.Type == "unique_name").Value;
+            string email = JWTtoken.Claims.FirstOrDefault(c => c.Type == "email").Value;
 
             var authenticationResult = IsPasswordCorrect(currentPassword, jwtToken);
             if (!authenticationResult)
@@ -171,7 +171,7 @@ namespace CinemaApp.Domain.Services.UserService
         private bool IsPasswordCorrect(string password, string jwtToken)
         {
             var JWTtoken = new JwtSecurityToken(jwtToken);
-            string email = JWTtoken.Claims.FirstOrDefault(c => c.Type == "unique_name").Value;
+            string email = JWTtoken.Claims.FirstOrDefault(c => c.Type == "email").Value;
             var result = _userRepository.IsPasswordCorrect(email, password);
 
             return result;
@@ -180,7 +180,7 @@ namespace CinemaApp.Domain.Services.UserService
         private string GetEmailFromToken(string jwtToken)
         {
             var JWTtoken = new JwtSecurityToken(jwtToken);
-            string email = JWTtoken.Claims.FirstOrDefault(c => c.Type == "unique_name").Value;
+            string email = JWTtoken.Claims.FirstOrDefault(c => c.Type == "email").Value;
 
             return email;
         }

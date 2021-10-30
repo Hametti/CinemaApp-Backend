@@ -28,7 +28,7 @@ namespace CinemaApp.DAL.Repositories.Authentication
                 _cinemaAppDbContext.UserCreds.Add(userCredsToAdd);
                 _cinemaAppDbContext.SaveChanges();
             }
-            var checksth = _cinemaAppDbContext.UserCreds.ToList();
+
             var user = _cinemaAppDbContext.UserCreds.FirstOrDefault(u => u.Email == email && u.Password == password);
             if (user != null)
                 return true;
