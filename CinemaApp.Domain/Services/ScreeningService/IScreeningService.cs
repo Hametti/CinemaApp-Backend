@@ -10,8 +10,8 @@ namespace CinemaApp.Domain.Services.ScreeningService
     public interface IScreeningService
     {
         public Screening GetEntityById(int id);
-        public IEnumerable<Screening> GetAllScreenings();
         public void AddScreening(Screening screening);
+        public IEnumerable<Screening> GetAllScreenings();
         public void DeleteScreeningById(int id);
     }
 }

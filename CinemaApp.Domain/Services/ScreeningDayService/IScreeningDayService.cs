@@ -12,7 +12,7 @@ namespace CinemaApp.Domain.Services.ScreeningDayService
     {
         public ScreeningDay GetEntityById(int id);
         public IEnumerable<ScreeningDay> GetAllScreeningDays();
-        public IEnumerable<ScreeningDayDTO> GetAllScreeningDaysDTO();
+        public IEnumerable<ScreeningDayDTO> GetAllScreeningDayDTOs();
         public void AddScreeningDay(ScreeningDay screeningDay);
         public void DeleteScreeningDayById(int id);
     }

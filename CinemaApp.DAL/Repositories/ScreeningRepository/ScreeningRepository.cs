@@ -19,6 +19,7 @@ namespace CinemaApp.DAL.Repositories.ScreeningRepository
         public override Screening GetEntityById(int id)
         {
             var screening = _cinemaAppDbContext.Screenings
+                .Include(s => s.ScreeningDay)
                 .Include(s => s.Movie)
                 .Include(s => s.Seats)
                 .FirstOrDefault(s => s.Id == id);
@@ -29,6 +30,7 @@ namespace CinemaApp.DAL.Repositories.ScreeningRepository
         public IEnumerable<Screening> GetAllScreenings()
         {
             var screenings = _cinemaAppDbContext.Screenings
+                .Include(s => s.ScreeningDay)
                 .Include(s => s.Movie)
                 .Include(s => s.Seats)
                 .ToList();
@@ -46,6 +48,8 @@ namespace CinemaApp.DAL.Repositories.ScreeningRepository
         {
             var screeningToDelete = _cinemaAppDbContext.Screenings
                 .FirstOrDefault(s => s.Id == id);
+
+            var seats = _cinemaAppDbContext.Seats.ToList();
 
             _cinemaAppDbContext.Screenings.Remove(screeningToDelete);
             _cinemaAppDbContext.SaveChanges();
