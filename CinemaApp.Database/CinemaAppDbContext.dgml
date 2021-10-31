@@ -55,10 +55,10 @@ Relational:TableColumnMappings: System.Collections.Generic.SortedSet`1[Microsoft
 Relational:TableColumnMappings: System.Collections.Generic.SortedSet`1[Microsoft.EntityFrameworkCore.Metadata.Internal.ColumnMapping]" IsPrimaryKey="False" IsForeignKey="True" IsRequired="False" IsIndexed="True" IsShadow="True" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
 <Node Id = "Screening.ScreeningDayId" Label="ScreeningDayId" Name="ScreeningDayId" Category="Property Foreign" Type="int" MaxLength="None" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="Relational:DefaultColumnMappings: System.Collections.Generic.SortedSet`1[Microsoft.EntityFrameworkCore.Metadata.Internal.ColumnMappingBase]
 Relational:TableColumnMappings: System.Collections.Generic.SortedSet`1[Microsoft.EntityFrameworkCore.Metadata.Internal.ColumnMapping]" IsPrimaryKey="False" IsForeignKey="True" IsRequired="True" IsIndexed="True" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
-<Node Id = "WeeklyDiscountMovie" Label="WeeklyDiscountMovie" Name="WeeklyDiscountMovie" BaseClass="" IsAbstract="False" ChangeTrackingStrategy="ChangeTrackingStrategy.Snapshot"  Annotations="ConstructorBinding: Microsoft.EntityFrameworkCore.Metadata.ConstructorBinding
+<Node Id = "WeeklyDiscount" Label="WeeklyDiscount" Name="WeeklyDiscount" BaseClass="" IsAbstract="False" ChangeTrackingStrategy="ChangeTrackingStrategy.Snapshot"  Annotations="ConstructorBinding: Microsoft.EntityFrameworkCore.Metadata.ConstructorBinding
 Relational:DefaultMappings: System.Collections.Generic.List`1[Microsoft.EntityFrameworkCore.Metadata.Internal.TableMappingBase]
 Relational:TableMappings: System.Collections.Generic.List`1[Microsoft.EntityFrameworkCore.Metadata.Internal.TableMapping]
-Relational:TableName: WeeklyDiscountMovie
+Relational:TableName: WeeklyDiscount
 ServiceOnlyConstructorBinding: Microsoft.EntityFrameworkCore.Metadata.ConstructorBinding" Category="EntityType" Group="Expanded" />
 <Node Id = "ScreeningDay.Id" Label="Id" Name="Id" Category="Property Primary" Type="int" MaxLength="None" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="Relational:DefaultColumnMappings: System.Collections.Generic.SortedSet`1[Microsoft.EntityFrameworkCore.Metadata.Internal.ColumnMappingBase]
 Relational:TableColumnMappings: System.Collections.Generic.SortedSet`1[Microsoft.EntityFrameworkCore.Metadata.Internal.ColumnMapping]
@@ -71,13 +71,13 @@ Relational:DefaultMappings: System.Collections.Generic.List`1[Microsoft.EntityFr
 Relational:TableMappings: System.Collections.Generic.List`1[Microsoft.EntityFrameworkCore.Metadata.Internal.TableMapping]
 Relational:TableName: UserCreds
 ServiceOnlyConstructorBinding: Microsoft.EntityFrameworkCore.Metadata.ConstructorBinding" Category="EntityType" Group="Expanded" />
-<Node Id = "WeeklyDiscountMovie.Id" Label="Id" Name="Id" Category="Property Primary" Type="int" MaxLength="None" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="Relational:DefaultColumnMappings: System.Collections.Generic.SortedSet`1[Microsoft.EntityFrameworkCore.Metadata.Internal.ColumnMappingBase]
+<Node Id = "WeeklyDiscount.Id" Label="Id" Name="Id" Category="Property Primary" Type="int" MaxLength="None" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="Relational:DefaultColumnMappings: System.Collections.Generic.SortedSet`1[Microsoft.EntityFrameworkCore.Metadata.Internal.ColumnMappingBase]
 Relational:TableColumnMappings: System.Collections.Generic.SortedSet`1[Microsoft.EntityFrameworkCore.Metadata.Internal.ColumnMapping]
 SqlServer:ValueGenerationStrategy: IdentityColumn" IsPrimaryKey="True" IsForeignKey="False" IsRequired="True" IsIndexed="False" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="ValueGenerated.OnAdd" />
-<Node Id = "WeeklyDiscountMovie.WeeklyDiscount" Label="WeeklyDiscount (1)" Name="WeeklyDiscount" Category="Navigation Property" Type="Movie"  Field="" Dependent="" Principal="Movie" Inverse="" PropertyAccessMode="PropertyAccessMode.Default" />
-<Node Id = "WeeklyDiscountMovie.WeeklyDiscountId" Label="WeeklyDiscountId" Name="WeeklyDiscountId" Category="Property Foreign" Type="Nullable&lt;int&gt;" MaxLength="None" Field="nofield" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="Relational:DefaultColumnMappings: System.Collections.Generic.SortedSet`1[Microsoft.EntityFrameworkCore.Metadata.Internal.ColumnMappingBase]
+<Node Id = "WeeklyDiscount.WeeklyDiscountMovie" Label="WeeklyDiscountMovie (1)" Name="WeeklyDiscountMovie" Category="Navigation Property" Type="Movie"  Field="" Dependent="" Principal="Movie" Inverse="" PropertyAccessMode="PropertyAccessMode.Default" />
+<Node Id = "WeeklyDiscount.WeeklyDiscountMovieId" Label="WeeklyDiscountMovieId" Name="WeeklyDiscountMovieId" Category="Property Foreign" Type="Nullable&lt;int&gt;" MaxLength="None" Field="nofield" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="Relational:DefaultColumnMappings: System.Collections.Generic.SortedSet`1[Microsoft.EntityFrameworkCore.Metadata.Internal.ColumnMappingBase]
 Relational:TableColumnMappings: System.Collections.Generic.SortedSet`1[Microsoft.EntityFrameworkCore.Metadata.Internal.ColumnMapping]" IsPrimaryKey="False" IsForeignKey="True" IsRequired="False" IsIndexed="True" IsShadow="True" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
-<Node Id = "WeeklyDiscountMovie.WeeklyDiscountValue" Label="WeeklyDiscountValue" Name="WeeklyDiscountValue" Category="Property Required" Type="int" MaxLength="None" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="Relational:DefaultColumnMappings: System.Collections.Generic.SortedSet`1[Microsoft.EntityFrameworkCore.Metadata.Internal.ColumnMappingBase]
+<Node Id = "WeeklyDiscount.WeeklyDiscountValue" Label="WeeklyDiscountValue" Name="WeeklyDiscountValue" Category="Property Required" Type="int" MaxLength="None" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="Relational:DefaultColumnMappings: System.Collections.Generic.SortedSet`1[Microsoft.EntityFrameworkCore.Metadata.Internal.ColumnMappingBase]
 Relational:TableColumnMappings: System.Collections.Generic.SortedSet`1[Microsoft.EntityFrameworkCore.Metadata.Internal.ColumnMapping]" IsPrimaryKey="False" IsForeignKey="False" IsRequired="True" IsIndexed="False" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
 <Node Id = "Reservation" Label="Reservation" Name="Reservation" BaseClass="" IsAbstract="False" ChangeTrackingStrategy="ChangeTrackingStrategy.Snapshot"  Annotations="ConstructorBinding: Microsoft.EntityFrameworkCore.Metadata.ConstructorBinding
 Relational:DefaultMappings: System.Collections.Generic.List`1[Microsoft.EntityFrameworkCore.Metadata.Internal.TableMappingBase]
@@ -153,6 +153,8 @@ Relational:TableColumnMappings: System.Collections.Generic.SortedSet`1[Microsoft
 Relational:TableColumnMappings: System.Collections.Generic.SortedSet`1[Microsoft.EntityFrameworkCore.Metadata.Internal.ColumnMapping]" IsPrimaryKey="False" IsForeignKey="False" IsRequired="True" IsIndexed="False" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
 <Node Id = "User.UniqueDiscountId" Label="UniqueDiscountId" Name="UniqueDiscountId" Category="Property Foreign" Type="Nullable&lt;int&gt;" MaxLength="None" Field="nofield" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="Relational:DefaultColumnMappings: System.Collections.Generic.SortedSet`1[Microsoft.EntityFrameworkCore.Metadata.Internal.ColumnMappingBase]
 Relational:TableColumnMappings: System.Collections.Generic.SortedSet`1[Microsoft.EntityFrameworkCore.Metadata.Internal.ColumnMapping]" IsPrimaryKey="False" IsForeignKey="True" IsRequired="False" IsIndexed="True" IsShadow="True" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
+<Node Id = "User.UniqueDiscountValue" Label="UniqueDiscountValue" Name="UniqueDiscountValue" Category="Property Required" Type="int" MaxLength="None" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="Relational:DefaultColumnMappings: System.Collections.Generic.SortedSet`1[Microsoft.EntityFrameworkCore.Metadata.Internal.ColumnMappingBase]
+Relational:TableColumnMappings: System.Collections.Generic.SortedSet`1[Microsoft.EntityFrameworkCore.Metadata.Internal.ColumnMapping]" IsPrimaryKey="False" IsForeignKey="False" IsRequired="True" IsIndexed="False" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
   </Nodes>
   <Links>
 <Link Source = "IModel" Target="Movie" Category="Contains" />
@@ -179,16 +181,16 @@ Relational:TableColumnMappings: System.Collections.Generic.SortedSet`1[Microsoft
 <Link Source = "Screening" Target="Screening.Hour" Category="Contains" />
 <Link Source = "Screening" Target="Screening.MovieId" Category="Contains" />
 <Link Source = "Screening" Target="Screening.ScreeningDayId" Category="Contains" />
-<Link Source = "IModel" Target="WeeklyDiscountMovie" Category="Contains" />
+<Link Source = "IModel" Target="WeeklyDiscount" Category="Contains" />
 <Link Source = "ScreeningDay" Target="ScreeningDay.Screenings" Category="Contains" />
 <Link Source = "ScreeningDay" Target="ScreeningDay.Id" Category="Contains" />
 <Link Source = "ScreeningDay" Target="ScreeningDay.Date" Category="Contains" />
 <Link Source = "IModel" Target="UserCred" Category="Contains" />
-<Link Source = "WeeklyDiscountMovie" Target="WeeklyDiscountMovie.WeeklyDiscount" Category="Contains" />
-<Link Source = "WeeklyDiscountMovie" Target="WeeklyDiscountMovie.Id" Category="Contains" />
-<Link Source="WeeklyDiscountMovie" Target="Movie" From="WeeklyDiscountMovie.WeeklyDiscountId" To="Movie.Id" Name="WeeklyDiscountMovie -> Movie" Annotations="Relational:ForeignKeyMappings: System.Collections.Generic.SortedSet`1[Microsoft.EntityFrameworkCore.Metadata.Internal.ForeignKeyConstraint]" IsUnique="False" Label="1:*" Category="Foreign Key" />
-<Link Source = "WeeklyDiscountMovie" Target="WeeklyDiscountMovie.WeeklyDiscountId" Category="Contains" />
-<Link Source = "WeeklyDiscountMovie" Target="WeeklyDiscountMovie.WeeklyDiscountValue" Category="Contains" />
+<Link Source = "WeeklyDiscount" Target="WeeklyDiscount.WeeklyDiscountMovie" Category="Contains" />
+<Link Source = "WeeklyDiscount" Target="WeeklyDiscount.Id" Category="Contains" />
+<Link Source="WeeklyDiscount" Target="Movie" From="WeeklyDiscount.WeeklyDiscountMovieId" To="Movie.Id" Name="WeeklyDiscount -> Movie" Annotations="Relational:ForeignKeyMappings: System.Collections.Generic.SortedSet`1[Microsoft.EntityFrameworkCore.Metadata.Internal.ForeignKeyConstraint]" IsUnique="False" Label="1:*" Category="Foreign Key" />
+<Link Source = "WeeklyDiscount" Target="WeeklyDiscount.WeeklyDiscountMovieId" Category="Contains" />
+<Link Source = "WeeklyDiscount" Target="WeeklyDiscount.WeeklyDiscountValue" Category="Contains" />
 <Link Source = "IModel" Target="Reservation" Category="Contains" />
 <Link Source = "UserCred" Target="UserCred.User" Category="Contains" />
 <Link Source = "UserCred" Target="UserCred.Id" Category="Contains" />
@@ -229,6 +231,7 @@ Relational:TableColumnMappings: System.Collections.Generic.SortedSet`1[Microsoft
 <Link Source = "User" Target="User.SecurityQuestionAnswer" Category="Contains" />
 <Link Source = "User" Target="User.Subscription" Category="Contains" />
 <Link Source = "User" Target="User.UniqueDiscountId" Category="Contains" />
+<Link Source = "User" Target="User.UniqueDiscountValue" Category="Contains" />
   </Links>
   <Styles>
     <Style TargetType="Node" GroupLabel="EntityType" ValueLabel="True">

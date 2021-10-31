@@ -14,11 +14,16 @@ namespace CinemaApp.Domain.Services.UserService
     {
         public void AddUser(NewUserDTO user);
         public UserDTO GetUserByToken(string jwtToken);
-        public IEnumerable<User> GetAllUsers(string jwtToken);
+        public IEnumerable<UserDTO> GetAllUsers(string jwtToken);
         public void DeleteAccount(string password, string jwtToken);
         public DiscountDTO GetUserDiscount(string jwtToken);
         public void ChangePassword(string currentPassword, string newPassword, string jwtToken);
         public void SubscribeNewsletter(string jwtToken);
         public void UnsubscribeNewsletter(string jwtToken);
+        public void AddSampleData();
+        public void AddSampleUsers();
+        public void AddSampleMovies();
+        public void AddSampleScreeningDays();
+        public void AddSampleReservationToDefaultUser();
     }
 }

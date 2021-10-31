@@ -19,5 +19,10 @@ namespace CinemaApp.DAL.Repositories.UserRepository
         public void SubscribeNewsletter(User user);
         public void UnsubscribeNewsletter(User user);
         public bool IsPasswordCorrect(string email, string password);
+        public void AddSampleData();
+        public void AddSampleUsers();
+        public void AddSampleMovies();
+        public void AddSampleScreeningDays();
+        public void AddSampleReservationToDefaultUser();
     }
 }

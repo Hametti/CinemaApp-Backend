@@ -19,6 +19,8 @@ using CinemaApp.Domain.Services.ScreeningDayService;
 using CinemaApp.DAL.Repositories.Authentication;
 using CinemaApp.DAL.Repositories.UserRepository;
 using CinemaApp.Domain.Services.UserService;
+using CinemaApp.Domain.Services.ReservationService;
+using CinemaApp.DAL.Repositories.ReservationRepository;
 
 namespace CinemaApp.API
 {
@@ -58,12 +60,17 @@ namespace CinemaApp.API
             services.AddScoped<IMovieRepository, MovieRepository>();
             services.AddScoped<IMovieService, MovieService>();
 
-            //Authentication
-            services.AddScoped<IAuthenticationRepository, AuthenticationRepository>();
-
             //User
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IUserRepository, UserRepository>();
+
+            //Reservation
+            services.AddScoped<IReservationService, ReservationService>();
+            services.AddScoped<IReservationRepository, ReservationRepository>();
+
+            //Authentication
+            services.AddScoped<IAuthenticationRepository, AuthenticationRepository>();
+
 
             services.AddControllers();
             services.AddSwaggerGen(c =>

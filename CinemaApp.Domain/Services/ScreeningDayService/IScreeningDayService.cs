@@ -10,9 +10,8 @@ namespace CinemaApp.Domain.Services.ScreeningDayService
 {
     public interface IScreeningDayService
     {
-        public ScreeningDay GetEntityById(int id);
-        public IEnumerable<ScreeningDay> GetAllScreeningDays();
-        public IEnumerable<ScreeningDayDTO> GetAllScreeningDayDTOs();
+        public ScreeningDayDTO GetEntityById(int id);
+        public IEnumerable<ScreeningDayDTO> GetAllScreeningDays();
         public void AddScreeningDay(ScreeningDay screeningDay);
         public void DeleteScreeningDayById(int id);
     }

@@ -36,26 +36,21 @@ namespace CinemaApp.API.Controllers
 
         [AllowAnonymous]
         [HttpPost("authenticate")]
-        public IActionResult Authenticate([FromBody] UserCred userCred)
+        public IActionResult Authenticate([FromBody]UserCred userCred)
         {
             var userCredCorrect = authenticationRepository.AreUserCredsCorrect(userCred.Email, userCred.Password);
 
-            if (userCredCorrect)
-            {
-                string role;
-                if (userRepository.GetUserByEmail(userCred.Email).IsAdmin)
-                    role = "admin";
-                else
-                    role = "user";
-
-                var token = jwtAuthenticationManager.Authenticate(userCred.Email, userCred.Password, role);
-                return Ok(token);
-            }
-
-            else
+            if (!userCredCorrect)
                 return Unauthorized(null);
-            
-        }
+                
+            string role;
+            if (userRepository.GetUserByEmail(userCred.Email).IsAdmin)
+                role = "admin";
+            else
+                role = "user";
 
+            var token = jwtAuthenticationManager.Authenticate(userCred.Email, userCred.Password, role);
+            return Ok(token);
+        }
     }
 }

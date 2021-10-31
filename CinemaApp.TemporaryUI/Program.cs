@@ -15,36 +15,35 @@ namespace CinemaApp.TemporaryUI
         private static CinemaAppDbContext _context = new CinemaAppDbContext();
         static void Main(string[] args)
         {
-            //AddSampleMovies();
-            //AddSampleScreeningDays();
-            //AddSampleUser();
-            //AddSampleReservationToUserWithEmail("test1", 1);
-            //AddSampleReservationToScreningWithId(19);
-            //AddRandomScreening()
+            AddSampleMovies();
+            AddSampleScreeningDays();
+            AddSampleUser();
+            AddSampleReservationToUserWithEmail("test1", 1);
+            AddSampleReservationToScreningWithId(19);
+            AddRandomScreening();
 
-            //DeleteRecord();
-            //DeleteAllScreeningDays();
-            //DeleteScreeningDayById(1);
-            //DeleteScreeningById(1);
-            //DeleteReservationById(1);
-            //DeleteUserByEmail("test1");
-            //DeleteMovieById(2);
+            DeleteRecord();
+            DeleteAllScreeningDays();
+            DeleteScreeningDayById(1);
+            DeleteScreeningById(1);
+            DeleteReservationById(1);
+            DeleteUserByEmail("test1");
+            DeleteMovieById(2);
 
-            //UpdateRecord();
-            //DeleteRecord();
+            DeleteRecord();
 
-            //AddSampleUser();
-            //DisplayUserCreds();
-            //GenerateSeats();
+            AddSampleUser();
+            DisplayUserCreds();
+            GenerateSeats();
 
-            //DisplayScreeningDays();
-            //DisplayMovies();
-            //DisplayScreenings();
-            //DisplayScreeningById(1);
-            //DisplayReservations();
-            //DisplaySeatsOfScreeningWithId(1);
-            //DisplaySeats();
-            //DisplayUsers();
+            DisplayScreeningDays();
+            DisplayMovies();
+            DisplayScreenings();
+            DisplayScreeningById(1);
+            DisplayReservations();
+            DisplaySeatsOfScreeningWithId(1);
+            DisplaySeats();
+            DisplayUsers();
 
             var token = new JwtSecurityToken("asd");
 
@@ -566,18 +565,18 @@ namespace CinemaApp.TemporaryUI
             var movies = new List<Movie>()
             {
                 new Movie
-                    {
-                        Title = "Inception",
-                        PictureUrl = "inception.jpg",
-                        ShortDescription = "Dominick \"Dom\" Cobb and Arthur are \"extractors\"; they perform corporate espionage using experimental military technology to infiltrate their targets' subconscious and extract information through a shared dream world.",
-                        Director = "Christopher Nolan",
-                        Cast = "Leonardo Di Caprio | Joseph Gordon-Levitt | Elliot Page | Tom Hardy | Ken Watanabe | Dileep Rao | Cillian Murphy | Tom Berenger | Marion Cotillard | Pete Postlethwaite | Michael Caine | Lukas Haas | Talulah Riley",
-                        LongDescription = "Dominick \"Dom\" Cobb and Arthur are \"extractors\"; they perform corporate espionage using experimental military technology to infiltrate their targets' subconscious and extract information through a shared dream world. Their latest target, Saito, reveals he arranged their mission to test Cobb for a seemingly impossible job: implanting an idea in a person's subconscious, or \"inception\". Saito wants Cobb to convince Robert, the son of Saito's competitor Maurice Fischer, to dissolve his father's company. Saito promises to clear Cobb's criminal status, which prevents him from returning home to his children.",
-                        ReleaseYear = "2010",
-                        Language = "English",
-                        Duration = "2h 28m",
-                        Budget = "$160 million"
-                    },
+                {
+                    Title = "Inception",
+                    PictureUrl = "inception.jpg",
+                    ShortDescription = "Dominick \"Dom\" Cobb and Arthur are \"extractors\"; they perform corporate espionage using experimental military technology to infiltrate their targets' subconscious and extract information through a shared dream world.",
+                    Director = "Christopher Nolan",
+                    Cast = "Leonardo Di Caprio | Joseph Gordon-Levitt | Elliot Page | Tom Hardy | Ken Watanabe | Dileep Rao | Cillian Murphy | Tom Berenger | Marion Cotillard | Pete Postlethwaite | Michael Caine | Lukas Haas | Talulah Riley",
+                    LongDescription = "Dominick \"Dom\" Cobb and Arthur are \"extractors\"; they perform corporate espionage using experimental military technology to infiltrate their targets' subconscious and extract information through a shared dream world. Their latest target, Saito, reveals he arranged their mission to test Cobb for a seemingly impossible job: implanting an idea in a person's subconscious, or \"inception\". Saito wants Cobb to convince Robert, the son of Saito's competitor Maurice Fischer, to dissolve his father's company. Saito promises to clear Cobb's criminal status, which prevents him from returning home to his children.",
+                    ReleaseYear = "2010",
+                    Language = "English",
+                    Duration = "2h 28m",
+                    Budget = "$160 million"
+                },
                 new Movie
                 {
                     Title = "No Time To Die",

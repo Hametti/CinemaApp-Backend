@@ -4,6 +4,7 @@ using CinemaApp.Database.Entities.UserModels;
 using CinemaApp.Domain.DTO;
 using CinemaApp.Domain.DTO.UserDTO;
 using CinemaApp.Domain.Exceptions;
+using CinemaApp.Domain.Helpers;
 using CinemaApp.Domain.Services.MovieService;
 using System;
 using System.Collections.Generic;
@@ -80,17 +81,11 @@ namespace CinemaApp.Domain.Services.UserService
             var JWTtoken = new JwtSecurityToken(jwtToken);
             string email = JWTtoken.Claims.FirstOrDefault(c => c.Type == "email").Value;
             var user = _userRepository.GetUserByEmail(email);
-            var userToReturn = new UserDTO
-            {
-                Email = user.Email,
-                Name = user.Name,
-                Subscription = user.Subscription,
-                DiscountMovie = user.UniqueDiscount
-            };
+            var userToReturn = DTOHelper.UserToDTO(user);
 
             return userToReturn;
         }
-        public IEnumerable<User> GetAllUsers(string jwtToken)
+        public IEnumerable<UserDTO> GetAllUsers(string jwtToken)
         {
             var JWTtoken = new JwtSecurityToken(jwtToken);
             var role = JWTtoken.Claims.FirstOrDefault(c => c.Type == "role").Value;
@@ -101,7 +96,9 @@ namespace CinemaApp.Domain.Services.UserService
             if (users == null)
                 throw new ListIsEmptyException();
 
-            return users;
+            var usersToReturn = DTOHelper.UsersToDTOs(users);
+
+            return usersToReturn;
         }
 
         public void DeleteAccount(string password, string jwtToken)
@@ -183,6 +180,31 @@ namespace CinemaApp.Domain.Services.UserService
             string email = JWTtoken.Claims.FirstOrDefault(c => c.Type == "email").Value;
 
             return email;
+        }
+
+        public void AddSampleData()
+        {
+            _userRepository.AddSampleData();
+        }
+
+        public void AddSampleUsers()
+        {
+            _userRepository.AddSampleUsers();
+        }
+
+        public void AddSampleMovies()
+        {
+            _userRepository.AddSampleMovies();
+        }
+
+        public void AddSampleScreeningDays()
+        {
+            _userRepository.AddSampleScreeningDays();
+        }
+
+        public void AddSampleReservationToDefaultUser()
+        {
+            _userRepository.AddSampleReservationToDefaultUser();
         }
     }
 }

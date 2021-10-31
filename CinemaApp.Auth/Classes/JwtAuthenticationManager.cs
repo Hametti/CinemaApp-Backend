@@ -28,7 +28,7 @@ namespace CinemaApp.Auth.Classes
                     new Claim(ClaimTypes.Email, email),
                     new Claim(ClaimTypes.Role, role)
                 }),
-                Expires = DateTime.UtcNow.AddHours(1),
+                Expires = DateTime.UtcNow.AddHours(24),
                 SigningCredentials =
                 new SigningCredentials(
                     new SymmetricSecurityKey(tokenKey),

@@ -79,8 +79,8 @@ namespace CinemaApp.API.Controllers
             }
         }
 
-        [HttpGet("weeklydiscountmovie")]
-        public IActionResult GetWeeklyDiscountMovie()
+        [HttpGet("weeklydiscount")]
+        public IActionResult GetWeeklyDiscount()
         {
             try
             {
@@ -99,7 +99,7 @@ namespace CinemaApp.API.Controllers
 
         //check for exceptions after implementing admin panel
         [HttpPost("add")]
-        public IActionResult AddMovie([FromBody] Movie movie)
+        public IActionResult AddMovie([FromBody]Movie movie)
         {
             try
             {

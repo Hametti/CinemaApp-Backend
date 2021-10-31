@@ -2,6 +2,7 @@
 using CinemaApp.Database.Entities.MovieModels;
 using CinemaApp.Domain.DTO.ScreeningDayDTOModels;
 using CinemaApp.Domain.Exceptions;
+using CinemaApp.Domain.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,21 +19,23 @@ namespace CinemaApp.Domain.Services.ScreeningDayService
             _screeningDayRepository = screeningDayRepository;
         }
 
-        public ScreeningDay GetEntityById(int id)
+        public ScreeningDayDTO GetEntityById(int id)
         {
             var screeningDay = _screeningDayRepository.GetEntityById(id);
             if (screeningDay == null)
                 throw new ItemDoesntExistException();
 
-            return screeningDay;
+            var screeningDayDTO = DTOHelper.ScreeningDayToDTO(screeningDay);
+            return screeningDayDTO;
         }
-        public IEnumerable<ScreeningDay> GetAllScreeningDays()
+        public IEnumerable<ScreeningDayDTO> GetAllScreeningDays()
         {
             var screeningDays = _screeningDayRepository.GetAllScreeningDays().ToList();
             if (screeningDays == null || screeningDays.Count == 0)
                 throw new ListIsEmptyException();
 
-            return screeningDays;
+            var screeningDaysDTO = DTOHelper.ScreeningDaysToDTOs(screeningDays);
+            return screeningDaysDTO;
         }
 
         public void AddScreeningDay(ScreeningDay screeningDay)
@@ -51,47 +54,6 @@ namespace CinemaApp.Domain.Services.ScreeningDayService
                 throw new ItemDoesntExistException();
 
             _screeningDayRepository.DeleteScreeningDayById(id);
-        }
-
-        public IEnumerable<ScreeningDayDTO> GetAllScreeningDayDTOs()
-        {
-            var screeningDays = _screeningDayRepository.GetAllScreeningDays().ToList();
-            if (screeningDays == null || screeningDays.Count == 0)
-                throw new ListIsEmptyException();
-
-            var screeningDaysDTO = new List<ScreeningDayDTO>();
-            
-            foreach(ScreeningDay screeningDay in screeningDays)
-            {
-                screeningDaysDTO.Add(
-                    new ScreeningDayDTO
-                    { 
-                        Id = screeningDay.Id,
-                        Date = screeningDay.Date
-                    });
-
-                var screeningDto = screeningDaysDTO.FirstOrDefault(s => s.Id == screeningDay.Id);
-
-                foreach (Screening screening in screeningDay.Screenings)
-                {
-                    screeningDto.Screenings.Add
-                    (
-                        new ScreeningDTO
-                        {
-                            Id = screening.Id,
-                            Hour = screening.Hour,
-                            Movie = new MovieDTO
-                            {
-                                Id = screening.Movie.Id,
-                                PictureUrl = screening.Movie.PictureUrl,
-                                Title = screening.Movie.Title
-                            }
-                        }
-                    );
-                }
-            }
-
-            return screeningDaysDTO;
         }
     }
 }

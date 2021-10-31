@@ -61,7 +61,7 @@ namespace CinemaApp.API.Controllers
         {
             try
             {
-                var screeningDays = _screeningDayService.GetAllScreeningDayDTOs();
+                var screeningDays = _screeningDayService.GetAllScreeningDays();
                 return Ok(screeningDays);
             }
             catch(ListIsEmptyException)

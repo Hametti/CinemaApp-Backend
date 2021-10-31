@@ -20,24 +20,6 @@ namespace CinemaApp.API.Controllers
             _userService = userService;
         }
 
-        [HttpPost("add")]
-        public IActionResult AddUser(NewUserDTO user)
-        {
-            try
-            {
-                _userService.AddUser(user);
-                return Ok("Succeed. Now you can log in.");
-            }
-            catch(ItemAlreadyExistsException)
-            {
-                return BadRequest("User with same email already exists");
-            }
-            catch(Exception e)
-            {
-                return BadRequest(e.Message);
-            }     
-        }
-
         [HttpGet("getUserByToken")]
         public IActionResult GetUserByToken([FromHeader]string JwtToken)
         {
@@ -54,14 +36,14 @@ namespace CinemaApp.API.Controllers
             {
                 return BadRequest("User with given token doesn't exist");
             }
-            catch(Exception)
+            catch (Exception)
             {
                 return BadRequest("Token is empty");
             }
         }
 
         [HttpGet("all")]
-        public IActionResult GetAllUsers([FromHeader] string JwtToken)
+        public IActionResult GetAllUsers([FromHeader]string JwtToken)
         {
             try
             {
@@ -86,22 +68,21 @@ namespace CinemaApp.API.Controllers
             }
         }
 
-        [HttpPost("deleteaccount")]
-        public IActionResult DeleteAccount([FromHeader] string password, [FromHeader] string jwtToken)
+        [HttpGet("getUserDiscount")]
+        public IActionResult GetUserDiscount([FromHeader]string JwtToken)
         {
             try
             {
-                _userService.DeleteAccount(password, jwtToken);
-                return Ok();
-                    
+                var discount = _userService.GetUserDiscount(JwtToken);
+                return Ok(discount);
             }
-            catch(ArgumentException)
+            catch (ArgumentException)
             {
                 return Unauthorized();
             }
-            catch(UnauthorizedAccessException)
+            catch (ItemDoesntExistException)
             {
-                return Unauthorized();
+                return BadRequest("User with given token doesn't exist");
             }
             catch (Exception e)
             {
@@ -109,30 +90,26 @@ namespace CinemaApp.API.Controllers
             }
         }
 
-        [HttpGet("getUserDiscount")]
-        public IActionResult GetUserDiscount([FromHeader] string JwtToken)
+        [HttpPost("add")]
+        public IActionResult AddUser(NewUserDTO user)
         {
             try
             {
-                var discount = _userService.GetUserDiscount(JwtToken);
-                return Ok(discount);
+                _userService.AddUser(user);
+                return Ok("Succeed. Now you can log in.");
             }
-            catch(ArgumentException)
+            catch (ItemAlreadyExistsException)
             {
-                return Unauthorized();
+                return BadRequest("User with same email already exists");
             }
-            catch(ItemDoesntExistException)
-            {
-                return BadRequest("User with given token doesn't exist");
-            }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return BadRequest(e.Message);
             }
         }
 
-        [HttpGet("subscribeNewsletter")]
-        public IActionResult SubscribeNewsletter([FromHeader] string JwtToken)
+        [HttpPost("subscribeNewsletter")]
+        public IActionResult SubscribeNewsletter([FromHeader]string JwtToken)
         {
             try
             {
@@ -153,8 +130,8 @@ namespace CinemaApp.API.Controllers
             }
         }
 
-        [HttpGet("unsubscribeNewsletter")]
-        public IActionResult UnsubscribeNewsletter([FromHeader] string JwtToken)
+        [HttpPost("unsubscribeNewsletter")]
+        public IActionResult UnsubscribeNewsletter([FromHeader]string JwtToken)
         {
             try
             {
@@ -197,6 +174,96 @@ namespace CinemaApp.API.Controllers
             }
         }
 
-        
+        [HttpDelete("deleteaccount")]
+        public IActionResult DeleteAccount([FromHeader]string password,[FromHeader]string jwtToken)
+        {
+            try
+            {
+                _userService.DeleteAccount(password, jwtToken);
+                return Ok();
+            }
+            catch (ArgumentException)
+            {
+                return Unauthorized();
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Unauthorized();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpGet("addsampledata")]
+        public IActionResult AddSampleData()
+        {
+            try
+            {
+                _userService.AddSampleData();
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpGet("addsamplemovies")]
+        public IActionResult AddSampleMovies()
+        {
+            try
+            {
+                _userService.AddSampleMovies();
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpGet("addsampleusers")]
+        public IActionResult AddSampleUsers()
+        {
+            try
+            {
+                _userService.AddSampleUsers();
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpGet("addsamplescreeningdays")]
+        public IActionResult AddSampleScreeningDays()
+        {
+            try
+            {
+                _userService.AddSampleScreeningDays();
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpGet("addsamplereservationtodefaultuser")]
+        public IActionResult AddSampleReservationToDefaultUser()
+        {
+            try
+            {
+                _userService.AddSampleReservationToDefaultUser();
+                return Ok();
+            }
+            catch(Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
     }
 }

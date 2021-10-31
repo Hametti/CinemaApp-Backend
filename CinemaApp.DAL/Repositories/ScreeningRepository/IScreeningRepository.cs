@@ -11,7 +11,7 @@ namespace CinemaApp.DAL.Repositories.ScreeningRepository
     public interface IScreeningRepository : IBaseRepository<Screening>
     {
         public IEnumerable<Screening> GetAllScreenings();
-        public void AddScreening(Screening screening);
+        public void AddScreening(Screening screening, int screeningDayId);
         public void DeleteScreeningById(int id);
     }
 }

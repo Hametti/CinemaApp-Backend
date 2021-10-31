@@ -38,9 +38,14 @@ namespace CinemaApp.DAL.Repositories.ScreeningRepository
             return screenings;
         }
 
-        public void AddScreening(Screening screening)
+        public void AddScreening(Screening screening, int screeningDayId)
         {
-            _cinemaAppDbContext.Screenings.Add(screening);
+            var screenings = _cinemaAppDbContext.Screenings.ToList();
+            var screeningDay = _cinemaAppDbContext.ScreeningDays
+                .Include(s => s.Screenings).
+                FirstOrDefault(s => s.Id == screeningDayId);
+
+            screeningDay.Screenings.Add(screening);
             _cinemaAppDbContext.SaveChanges();
         }
 

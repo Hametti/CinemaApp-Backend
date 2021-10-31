@@ -1,4 +1,5 @@
 ﻿using CinemaApp.Database.Entities.MovieModels;
+using CinemaApp.Domain.DTO;
 using CinemaApp.Domain.Exceptions;
 using CinemaApp.Domain.Services.ScreeningService;
 using Microsoft.AspNetCore.Mvc;
@@ -19,27 +20,19 @@ namespace CinemaApp.API.Controllers
             _screeningService = screeningService;
         }
 
-        [HttpPost("add")]
-        public IActionResult AddScreening([FromBody] Screening screening)
+        [HttpGet("{id}")]
+        public IActionResult GetScreeningById(int id)
         {
             try
             {
-                _screeningService.AddScreening(screening);
-                return Ok();
+                var screening = _screeningService.GetEntityById(id);
+                return Ok(screening);
             }
-            catch(ItemAlreadyExistsException)
+            catch (ItemDoesntExistException)
             {
-                return BadRequest("Screening with same date and hour already exists");
+                return BadRequest("Screening with given id doesn't exist");
             }
-            catch(ItemDoesntExistException)
-            {
-                return BadRequest("Given movie isn't correct");
-            }
-            catch(ArgumentException)
-            {
-                return BadRequest("Given hour is incorrect. Try something like this \"12:00\"");
-            }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return BadRequest(e.Message);
             }
@@ -63,6 +56,33 @@ namespace CinemaApp.API.Controllers
             }
         }
 
+        [HttpPost("add")]
+        public IActionResult AddScreening([FromBody] ScreeningToAddDTO screeningDTO, int screeningDayId)
+        {
+            try
+            {
+                _screeningService.AddScreening(screeningDTO, screeningDayId);
+                return Ok();
+            }
+            catch (ItemAlreadyExistsException)
+            {
+                return BadRequest("Screening with same date and hour already exists");
+            }
+            catch (ItemDoesntExistException)
+            {
+                return BadRequest("ScreeningDay with given id doesn't exist");
+            }
+            catch (ArgumentException)
+            {
+                return BadRequest("Given hour is incorrect. Try something like this \"12:00\"");
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+
         [HttpDelete("delete/{id}")]
         public IActionResult DeleteScreeningById(int id)
         {
@@ -70,24 +90,6 @@ namespace CinemaApp.API.Controllers
             {
                 _screeningService.DeleteScreeningById(id);
                 return Ok();
-            }
-            catch(ItemDoesntExistException)
-            {
-                return BadRequest("Screening with given id doesn't exist");
-            }
-            catch(Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }
-
-        [HttpGet("{id}")]
-        public IActionResult GetScreeningById(int id)
-        {
-            try
-            {
-                var screening = _screeningService.GetEntityById(id);
-                return Ok(screening);
             }
             catch(ItemDoesntExistException)
             {

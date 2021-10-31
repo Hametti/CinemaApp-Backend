@@ -1,7 +1,12 @@
 ﻿using CinemaApp.DAL.Repositories.MovieRepository;
+using CinemaApp.DAL.Repositories.ScreeningDayRepository;
 using CinemaApp.DAL.Repositories.ScreeningRepository;
 using CinemaApp.Database.Entities.MovieModels;
+using CinemaApp.Database.Entities.UserModels;
+using CinemaApp.Domain.DTO;
+using CinemaApp.Domain.DTO.ScreeningDayDTOModels;
 using CinemaApp.Domain.Exceptions;
+using CinemaApp.Domain.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,37 +17,60 @@ namespace CinemaApp.Domain.Services.ScreeningService
     {
         private readonly IScreeningRepository _screeningRepository;
         private readonly IMovieRepository _movieRepository;
-        public ScreeningService(IScreeningRepository screeningRepository, IMovieRepository movieRepository)
+        private readonly IScreeningDayRepository _screeningDayRepository;
+        public ScreeningService(IScreeningRepository screeningRepository, IMovieRepository movieRepository, IScreeningDayRepository screeningDayRepository)
         {
             _screeningRepository = screeningRepository;
             _movieRepository = movieRepository;
+            _screeningDayRepository = screeningDayRepository;
         }
 
-        public void AddScreening(Screening screening)
+        public void AddScreening(ScreeningToAddDTO screeningDTO, int screeningDayId)
         {
+            var screeningDay = _screeningDayRepository.GetEntityById(screeningDayId);
+            if (screeningDay == null)
+                throw new ItemDoesntExistException();
+
             var screeningFromDb = _screeningRepository
                 .GetAllScreenings()
-                .FirstOrDefault(s => s.Hour == screening.Hour && s.ScreeningDay.Date == screening.ScreeningDay.Date);
+                .FirstOrDefault(s => s.Hour == screeningDTO.Hour && s.ScreeningDay.Date == screeningDay.Date);
             
             if (screeningFromDb != null)
                 throw new ItemAlreadyExistsException();
-
-            var movie = _movieRepository.GetEntityById(screening.Movie.Id);
-            if (movie == null)
-                throw new ItemDoesntExistException();
            
-            if (screening.Hour.Length < 2 || screening.Hour.Length > 5)
+            if (screeningDTO.Hour.Length < 2 || screeningDTO.Hour.Length > 5)
                 throw new ArgumentException();
 
-            _screeningRepository.AddScreening(screening);
+            var screeningMovie = _movieRepository.GetEntityById(screeningDTO.movieId);
+            if (screeningMovie == null)
+                throw new ItemDoesntExistException();
+
+            var screening = new Screening
+            {
+                Movie = _movieRepository.GetEntityById(screeningDTO.movieId),
+                Hour = screeningDTO.Hour,
+                Seats = GenerateSeats()
+            };
+
+            _screeningRepository.AddScreening(screening, screeningDayId);
         }
-        public IEnumerable<Screening> GetAllScreenings()
+        public IEnumerable<ScreeningDTO> GetAllScreenings()
         {
             var screenings = _screeningRepository.GetAllScreenings().ToList();
             if (screenings == null && screenings.Count == 0)
                 throw new ListIsEmptyException();
 
-            return screenings;
+            var screeningDTOs = DTOHelper.ScreeningsToDTOs(screenings);
+            return screeningDTOs;
+        }
+        public ScreeningDTO GetEntityById(int id)
+        {
+            var screening = _screeningRepository.GetEntityById(id);
+            if (screening == null)
+                throw new ItemDoesntExistException();
+
+            var screeningDTO = DTOHelper.ScreeningToDTO(screening);
+            return screeningDTO;
         }
 
         public void DeleteScreeningById(int id)
@@ -54,13 +82,31 @@ namespace CinemaApp.Domain.Services.ScreeningService
             _screeningRepository.DeleteScreeningById(id);
         }
 
-        public Screening GetEntityById(int id)
+        private List<Seat> GenerateSeats()
         {
-            var screening = _screeningRepository.GetEntityById(id);
-            if (screening == null)
-                throw new ItemDoesntExistException();
+            var seats = new List<Seat>();
 
-            return screening;
+            for (int i = 0; i < 8; i++)
+                for (int j = 0; j < 10; j++)
+                {
+                    seats.Add(
+                        new Seat
+                        {
+                            Row = i + 1,
+                            SeatNumber = j + 1
+                        });
+                }
+
+            for (int i = 8; i < 10; i++)
+                for (int j = 0; j < 14; j++)
+                    seats.Add(
+                        new Seat
+                        {
+                            Row = i + 1,
+                            SeatNumber = j + 1
+                        });
+
+            return seats;
         }
     }
 }
