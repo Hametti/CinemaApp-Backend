@@ -130,6 +130,7 @@ namespace CinemaApp.Domain.Helpers
             foreach (Seat seat in seats)
                 seatDTOs.Add(SeatToDTO(seat));
 
+            seatDTOs = seatDTOs.OrderBy(s => s.Row).ThenBy(s => s.SeatNumber).ToList();
             return seatDTOs;
         }
     }

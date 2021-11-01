@@ -42,7 +42,6 @@ namespace CinemaApp.DAL.Repositories.ScreeningDayRepository
                                 .Include(s => s.Screenings)
                                 .ThenInclude(s => s.Movie)
                                 .Include(s => s.Screenings)
-                                .ThenInclude(s => s.Seats)
                                 .ToList();
 
             return screeningDays;

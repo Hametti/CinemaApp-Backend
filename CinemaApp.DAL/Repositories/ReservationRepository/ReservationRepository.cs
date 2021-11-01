@@ -46,7 +46,10 @@ namespace CinemaApp.DAL.Repositories.ReservationRepository
 
         public Screening GetScreeningById(int id)
         {
-            var screening = _cinemaAppDbContext.Screenings.FirstOrDefault(s => s.Id == id);
+            var screening = _cinemaAppDbContext.Screenings
+                .Include(s => s.ScreeningDay)
+                .Include(s => s.Movie)
+                .FirstOrDefault(s => s.Id == id);
             return screening;
         }
 
@@ -105,6 +108,13 @@ namespace CinemaApp.DAL.Repositories.ReservationRepository
                 .FirstOrDefault(u => u.Email == email);
 
             return user.Reservations.ToList();
+        }
+        
+        //Only for testing purposes
+        public IEnumerable<Reservation> GetAllReservations()
+        {
+            var reservations = _cinemaAppDbContext.Reservations.Include(r => r.ReservedSeats);
+            return reservations;
         }
     }
 }

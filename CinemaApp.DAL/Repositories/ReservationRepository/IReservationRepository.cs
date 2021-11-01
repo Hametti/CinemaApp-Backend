@@ -19,5 +19,8 @@ namespace CinemaApp.DAL.Repositories.ReservationRepository
         public void AddReservationToUser(int userId, Reservation reservation);
         public void DeleteReservationById(int id);
         IEnumerable<Reservation> GetUserReservations(string email);
+
+        //for testing purposes only
+        public IEnumerable<Reservation> GetAllReservations();
     }
 }

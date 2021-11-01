@@ -10,9 +10,12 @@ namespace CinemaApp.Domain.Services.ReservationService
 {
     public interface IReservationService
     {
-        public void AddReservation(string jwtToken, ReservationToAddDTO reservation);
+        public void AddReservation(string jwtToken, List<int> seatIds);
         public ReservationDTO GetReservationById(string jwtToken, int id);
         public IEnumerable<ReservationDTO> GetUserReservations(string jwtToken);
         public void DeleteReservationById(string jwtToken, int id);
+
+        //for testing purposes only
+        public IEnumerable<ReservationDTO> GetAllReservations();
     }
 }

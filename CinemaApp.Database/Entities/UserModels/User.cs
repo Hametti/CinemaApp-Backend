@@ -12,7 +12,7 @@ namespace CinemaApp.Database.Entities.UserModels
         public int Id { get; set; }
         public string Email { get; set; }
         public string Name { get; set; }
-        public bool IsAdmin { get; set; } = false;
+        public bool IsAdmin { get; set; }
         public bool Subscription { get; set; } = false;
         public Movie UniqueDiscount { get; set; } = null;
         public int UniqueDiscountValue { get; set; }

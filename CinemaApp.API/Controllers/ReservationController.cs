@@ -1,4 +1,5 @@
-﻿using CinemaApp.Domain.DTO.Reservation;
+﻿using CinemaApp.Database.Entities.UserModels;
+using CinemaApp.Domain.DTO.Reservation;
 using CinemaApp.Domain.Exceptions;
 using CinemaApp.Domain.Services.ReservationService;
 using Microsoft.AspNetCore.Mvc;
@@ -59,12 +60,28 @@ namespace CinemaApp.API.Controllers
             }
         }
 
-        [HttpPost("add")]
-        public IActionResult AddReservation([FromHeader]string jwtToken, [FromBody]ReservationToAddDTO reservation)
+        //For testing purposes only
+        [HttpGet("all")]
+        public IActionResult GetAllReservations()
         {
             try
             {
-                _reservationService.AddReservation(jwtToken, reservation);
+                var reservations = _reservationService.GetAllReservations();
+                return Ok(reservations);
+            }
+            catch(Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpPost("add")]
+        public IActionResult AddReservation([FromHeader]string jwtToken, [FromBody]IEnumerable<int> seatIdsArray)
+        {
+            try
+            {
+                var seatIds = seatIdsArray.ToList();
+                _reservationService.AddReservation(jwtToken, seatIds);
                 return Ok();
             }
             catch(UnauthorizedAccessException)

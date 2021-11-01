@@ -1,6 +1,7 @@
 ﻿using CinemaApp.DAL.Repositories.BaseRepository;
 using CinemaApp.Database;
 using CinemaApp.Database.Entities.MovieModels;
+using CinemaApp.Database.Entities.UserModels;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -34,10 +35,65 @@ namespace CinemaApp.DAL.Repositories.MovieRepository
                              .Where(s => s.Movie.Id == id)
                              .ToList();
 
-            if(screenings != null)
+            if (screenings != null)
                 _cinemaAppDbContext.RemoveRange(screenings);
 
+            var users = _cinemaAppDbContext.Users.Where(u => u.UniqueDiscount.Id == id).ToList();
+            var movies = _cinemaAppDbContext.Movies.ToList();
+            foreach (User user in users)
+            {
+                user.UniqueDiscount = null;
+                user.UniqueDiscountValue = 0;
+            }
+
+            var weeklyDiscount = _cinemaAppDbContext.WeeklyDiscount.Include(w => w.WeeklyDiscountMovie).FirstOrDefault();
+            if (weeklyDiscount != null && weeklyDiscount.WeeklyDiscountMovie.Id == id)
+                 weeklyDiscount = null;
+
             _cinemaAppDbContext.Remove(movie);
+            _cinemaAppDbContext.SaveChanges();
+
+            foreach (User user in users)
+                UpdateUserDiscount(user.Id);
+
+            if (weeklyDiscount == null)
+                UpdateWeeklyDiscount();
+        }
+
+        private void UpdateUserDiscount(int userId)
+        {
+            var user = _cinemaAppDbContext.Users.Include(u => u.UniqueDiscount).FirstOrDefault(u => u.Id == userId);
+
+            var movie = GetRandomMovie();
+            if (movie == null)
+            {
+                user.UniqueDiscount = null;
+                user.UniqueDiscountValue = 0;
+                return;
+            }
+
+            user.UniqueDiscount = movie;
+            user.UniqueDiscountValue = new Random().Next(10, 60);
+            _cinemaAppDbContext.SaveChanges();
+        }
+
+        private void UpdateWeeklyDiscount()
+        {
+            var weeklyDiscount = _cinemaAppDbContext.WeeklyDiscount.Include(w => w.WeeklyDiscountMovie).FirstOrDefault();
+
+            var movie = GetRandomMovie();
+            if (movie == null)
+            {
+                weeklyDiscount = null;
+                return;
+            }
+
+            weeklyDiscount = new WeeklyDiscount
+            {
+                WeeklyDiscountMovie = movie,
+                WeeklyDiscountValue = new Random().Next(15, 60)
+            };
+
             _cinemaAppDbContext.SaveChanges();
         }
 
@@ -55,7 +111,7 @@ namespace CinemaApp.DAL.Repositories.MovieRepository
 
         public Movie GetRandomMovie()
         {
-            var movie = _cinemaAppDbContext.Movies.ToList().OrderBy(o => Guid.NewGuid()).First();
+            var movie = _cinemaAppDbContext.Movies.ToList().OrderBy(o => Guid.NewGuid()).FirstOrDefault();
             return movie;
         }
 
@@ -75,7 +131,7 @@ namespace CinemaApp.DAL.Repositories.MovieRepository
             var movie = GetRandomMovie();
             var discounts = _cinemaAppDbContext.WeeklyDiscount.Include(w => w.WeeklyDiscountMovie).ToList();
             _cinemaAppDbContext.WeeklyDiscount.RemoveRange(discounts);
-                
+
             var discount = new WeeklyDiscount { WeeklyDiscountMovie = movie, WeeklyDiscountValue = new Random().Next(15, 60) };
             _cinemaAppDbContext.WeeklyDiscount.Add(discount);
             _cinemaAppDbContext.SaveChanges();

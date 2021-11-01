@@ -253,13 +253,18 @@ namespace CinemaApp.DAL.Repositories.UserRepository
             {
                 Email = "admin",
                 Password = "admin",
-                User = userToAdd
+                User = secondUserToAdd
             };
 
+            //normal user
             _cinemaAppDbContext.Users.Add(userToAdd);
             _cinemaAppDbContext.UserCreds.Add(userCredsToAdd);
-            _cinemaAppDbContext.SaveChanges();
 
+            //admin
+            _cinemaAppDbContext.Users.Add(secondUserToAdd);
+            _cinemaAppDbContext.UserCreds.Add(secondUserCredsToAdd);
+
+            _cinemaAppDbContext.SaveChanges();
         }
 
         public void AddSampleScreeningDays()

@@ -1,4 +1,5 @@
 ﻿using CinemaApp.Database.Entities.MovieModels;
+using CinemaApp.Database.Entities.UserModels;
 using CinemaApp.Domain.DTO;
 using CinemaApp.Domain.DTO.ScreeningDayDTOModels;
 using System;
@@ -12,8 +13,9 @@ namespace CinemaApp.Domain.Services.ScreeningService
     public interface IScreeningService
     {
         public ScreeningDTO GetEntityById(int id);
-        public void AddScreening(ScreeningToAddDTO screening, int screeningDayId);
+        public void AddScreening(ScreeningToAddDTO screening);
         public IEnumerable<ScreeningDTO> GetAllScreenings();
         public void DeleteScreeningById(int id);
+        public IEnumerable<SeatDTO> GetAllScreeningSeats(int id);
     }
 }

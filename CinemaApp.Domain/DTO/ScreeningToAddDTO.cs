@@ -9,7 +9,8 @@ namespace CinemaApp.Domain.DTO
 {
     public class ScreeningToAddDTO
     {
-        public int movieId { get; set; }
+        public int MovieId { get; set; }
+        public int ScreeningDayId { get; set; }
         public string Hour { get; set; }
         public List<Seat> Seats { get; set; } = new List<Seat>();
     }

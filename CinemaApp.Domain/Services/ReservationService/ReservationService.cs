@@ -55,43 +55,50 @@ namespace CinemaApp.Domain.Services.ReservationService
             return reservationDTOs;
         }
 
-        public void AddReservation(string jwtToken, ReservationToAddDTO reservationToAdd)
+        public void AddReservation(string jwtToken, List<int> seatIds)
         {
             var user = _reservationRepository.GetUserByEmail(GetEmailFromToken(jwtToken));
             if (user == null)
                 throw new UnauthorizedAccessException();
 
-            List<Seat> reservedSeats = new List<Seat>();
-            foreach (int seatId in reservationToAdd.ReservedSeatsIds)
+            if (seatIds.Count == 0 || seatIds == null)
+                throw new ItemDoesntExistException();
+
+            var seats = new List<Seat>();
+            foreach(int id in seatIds)
             {
-                var seatToReserve = _reservationRepository.GetSeatById(seatId);
-                if (seatToReserve == null)
+                var seat = _reservationRepository.GetSeatById(id);
+                if (seat == null)
                     throw new ItemDoesntExistException();
-                if (seatToReserve.IsOccupied)
+
+                if (seat.IsOccupied)
                     throw new SeatIsOccupiedException();
 
-                reservedSeats.Add(seatToReserve);
+                seats.Add(seat);
             }
 
-            var screeningDay = _reservationRepository.GetScreeningDayByDate(reservationToAdd.Date);
-            if (screeningDay == null)
+            var screeningId = seats[0].ScreeningId;
+            foreach(Seat seat in seats)
+                if (seat.ScreeningId != screeningId)
+                    throw new MultipleScreeningsException();
+
+            var screening = _reservationRepository.GetScreeningById(screeningId);
+            if (screening == null)
                 throw new ItemDoesntExistException();
 
-            var screening = _reservationRepository.GetScreeningById(reservationToAdd.ScreeningId);
-            if (screening == null && screening.Hour != reservationToAdd.ReservationHour)
+            if (screening.ScreeningDay == null)
                 throw new ItemDoesntExistException();
 
-            var movie = _reservationRepository.GetMovieByTitle(reservationToAdd.MovieTitle);
-            if (movie == null)
+            if (screening.Movie == null)
                 throw new ItemDoesntExistException();
 
             var reservation = new Reservation
             {
-                Date = reservationToAdd.Date,
-                ReservationHour = reservationToAdd.ReservationHour,
-                ScreeningId = reservationToAdd.ScreeningId,
-                MovieTitle = reservationToAdd.MovieTitle,
-                ReservedSeats = reservedSeats
+                Date = screening.ScreeningDay.Date,
+                ReservationHour = screening.Hour,
+                ScreeningId = screening.Id,
+                MovieTitle = screening.Movie.Title,
+                ReservedSeats = seats,
             };
 
             _reservationRepository.AddReservationToUser(user.Id, reservation);
@@ -131,6 +138,14 @@ namespace CinemaApp.Domain.Services.ReservationService
             string email = JWTtoken.Claims.FirstOrDefault(c => c.Type == "email").Value;
 
             return email;
+        }
+
+        //for testing purposes only
+        public IEnumerable<ReservationDTO> GetAllReservations()
+        {
+            var reservations = _reservationRepository.GetAllReservations();
+            var reservationDTOs = DTOHelper.ReservationsToDTOs(reservations);
+            return reservationDTOs;
         }
     }
 }

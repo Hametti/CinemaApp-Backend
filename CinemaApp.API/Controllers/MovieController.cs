@@ -124,10 +124,6 @@ namespace CinemaApp.API.Controllers
             {
                 return BadRequest("Movie with given id doesn't exist");
             }
-            catch (Exception e)
-            {
-                return BadRequest($"Something went wrong: {e.Message}");
-            }
         }
     }
 }

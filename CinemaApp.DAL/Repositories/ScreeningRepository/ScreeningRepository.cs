@@ -1,6 +1,7 @@
 ﻿using CinemaApp.DAL.Repositories.BaseRepository;
 using CinemaApp.Database;
 using CinemaApp.Database.Entities.MovieModels;
+using CinemaApp.Database.Entities.UserModels;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -58,6 +59,12 @@ namespace CinemaApp.DAL.Repositories.ScreeningRepository
 
             _cinemaAppDbContext.Screenings.Remove(screeningToDelete);
             _cinemaAppDbContext.SaveChanges();
+        }
+
+        public IEnumerable<Seat> GetAllScreeningSeats(int id)
+        {
+            var screening = _cinemaAppDbContext.Screenings.Include(s => s.Seats).FirstOrDefault(s => s.Id == id);
+            return screening.Seats;
         }
     }
 }

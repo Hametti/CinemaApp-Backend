@@ -25,9 +25,9 @@ namespace CinemaApp.Domain.Services.ScreeningService
             _screeningDayRepository = screeningDayRepository;
         }
 
-        public void AddScreening(ScreeningToAddDTO screeningDTO, int screeningDayId)
+        public void AddScreening(ScreeningToAddDTO screeningDTO)
         {
-            var screeningDay = _screeningDayRepository.GetEntityById(screeningDayId);
+            var screeningDay = _screeningDayRepository.GetEntityById(screeningDTO.ScreeningDayId);
             if (screeningDay == null)
                 throw new ItemDoesntExistException();
 
@@ -41,18 +41,18 @@ namespace CinemaApp.Domain.Services.ScreeningService
             if (screeningDTO.Hour.Length < 2 || screeningDTO.Hour.Length > 5)
                 throw new ArgumentException();
 
-            var screeningMovie = _movieRepository.GetEntityById(screeningDTO.movieId);
+            var screeningMovie = _movieRepository.GetEntityById(screeningDTO.MovieId);
             if (screeningMovie == null)
                 throw new ItemDoesntExistException();
 
             var screening = new Screening
             {
-                Movie = _movieRepository.GetEntityById(screeningDTO.movieId),
+                Movie = _movieRepository.GetEntityById(screeningDTO.MovieId),
                 Hour = screeningDTO.Hour,
                 Seats = GenerateSeats()
             };
 
-            _screeningRepository.AddScreening(screening, screeningDayId);
+            _screeningRepository.AddScreening(screening, screeningDTO.ScreeningDayId);
         }
         public IEnumerable<ScreeningDTO> GetAllScreenings()
         {
@@ -107,6 +107,13 @@ namespace CinemaApp.Domain.Services.ScreeningService
                         });
 
             return seats;
+        }
+
+        public IEnumerable<SeatDTO> GetAllScreeningSeats(int id)
+        {
+            var seats = _screeningRepository.GetAllScreeningSeats(id);
+            var seatDTOs = DTOHelper.SeatsToDTOs(seats);
+            return seatDTOs;
         }
     }
 }

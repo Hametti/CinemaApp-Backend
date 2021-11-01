@@ -56,12 +56,26 @@ namespace CinemaApp.API.Controllers
             }
         }
 
-        [HttpPost("add")]
-        public IActionResult AddScreening([FromBody] ScreeningToAddDTO screeningDTO, int screeningDayId)
+        [HttpGet("{id}/seats")]
+        public IActionResult GetAllScreeningSeats(int id)
         {
             try
             {
-                _screeningService.AddScreening(screeningDTO, screeningDayId);
+                var seats = _screeningService.GetAllScreeningSeats(id);
+                return Ok(seats);
+            }
+            catch(Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpPost("add")]
+        public IActionResult AddScreening([FromBody]ScreeningToAddDTO screeningDTO)
+        {
+            try
+            {
+                _screeningService.AddScreening(screeningDTO);
                 return Ok();
             }
             catch (ItemAlreadyExistsException)
