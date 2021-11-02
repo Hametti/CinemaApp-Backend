@@ -3,6 +3,7 @@ using CinemaApp.Database.Entities.UserModels;
 using CinemaApp.Domain.DTO;
 using CinemaApp.Domain.DTO.Reservation;
 using CinemaApp.Domain.DTO.ScreeningDayDTOModels;
+using CinemaApp.Domain.DTO.ScreeningToDisplayDTO;
 using CinemaApp.Domain.DTO.UserDTO;
 using System;
 using System.Collections.Generic;
@@ -44,7 +45,6 @@ namespace CinemaApp.Domain.Helpers
             {
                 Email = user.Email,
                 Name = user.Name,
-                IsAdmin = user.IsAdmin,
                 Subscription = user.Subscription,
                 UniqueDiscount = user.UniqueDiscount,
                 UniqueDiscountValue = user.UniqueDiscountValue,
@@ -132,6 +132,46 @@ namespace CinemaApp.Domain.Helpers
 
             seatDTOs = seatDTOs.OrderBy(s => s.Row).ThenBy(s => s.SeatNumber).ToList();
             return seatDTOs;
+        }
+
+        public static ScreeningDayToDisplayDTO ScreeningDayToScreeningDayToDisplayDTO(ScreeningDay screeningDay)
+        {
+            var sortedScreenings = screeningDay.Screenings.OrderBy(s => s.Movie.Id).ToList();
+            var screeningDTOs = new List<ScreeningToDisplayDTO>();
+            foreach(Screening screening in sortedScreenings)
+            {
+                var screeningDTO = screeningDTOs.FirstOrDefault(s => s.MovieId == screening.Movie.Id);
+                if (screeningDTO == null)
+                    screeningDTOs.Add(new ScreeningToDisplayDTO 
+                    {
+                        MovieId = screening.Movie.Id,
+                        MovieTitle = screening.Movie.Title,
+                        PictureUrl = screening.Movie.PictureUrl,
+                        ScreeningHours = new List<ScreeningHourDTO> { new ScreeningHourDTO { ScreeningId = screening.Id, Hour = screening.Hour } }
+                    });
+
+                else
+                    screeningDTO.ScreeningHours.Add(new ScreeningHourDTO { ScreeningId = screening.Id, Hour = screening.Hour });
+            }
+
+            var screeningDayToDisplayDTO = new ScreeningDayToDisplayDTO
+            {
+                Id = screeningDay.Id,
+                Date = screeningDay.Date,
+                Screenings = screeningDTOs
+            };
+
+            return screeningDayToDisplayDTO;
+        }
+
+        public static IEnumerable<ScreeningDayToDisplayDTO> ScreeningDaysToScreeningDaysToDisplayDTO(IEnumerable<ScreeningDay> screeningDays)
+        {
+            var screeningDaysToDisplayDTO = new List<ScreeningDayToDisplayDTO>();
+
+            foreach(ScreeningDay screeningDay in screeningDays)
+                screeningDaysToDisplayDTO.Add(ScreeningDayToScreeningDayToDisplayDTO(screeningDay));
+
+            return screeningDaysToDisplayDTO;
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using CinemaApp.Database.Entities.MovieModels;
 using CinemaApp.Domain.DTO.ScreeningDayDTOModels;
+using CinemaApp.Domain.DTO.ScreeningToDisplayDTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,7 @@ namespace CinemaApp.Domain.Services.ScreeningDayService
     public interface IScreeningDayService
     {
         public ScreeningDayDTO GetEntityById(int id);
-        public IEnumerable<ScreeningDayDTO> GetAllScreeningDays();
+        public IEnumerable<ScreeningDayToDisplayDTO> GetAllScreeningDays();
         public void AddScreeningDay(ScreeningDay screeningDay);
         public void DeleteScreeningDayById(int id);
     }
