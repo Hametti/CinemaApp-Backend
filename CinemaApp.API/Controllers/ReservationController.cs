@@ -76,13 +76,13 @@ namespace CinemaApp.API.Controllers
         }
 
         [HttpPost("add")]
-        public IActionResult AddReservation([FromHeader]string jwtToken, [FromBody]IEnumerable<int> seatIdsArray)
+        public IActionResult AddReservation([FromHeader]string jwtToken, [FromBody]IEnumerable<int> seatIds)
         {
             try
             {
-                var seatIds = seatIdsArray.ToList();
-                _reservationService.AddReservation(jwtToken, seatIds);
-                return Ok();
+                var seatIdsList = seatIds.ToList();
+                _reservationService.AddReservation(jwtToken, seatIdsList);
+                return Ok("Succeed");
             }
             catch(UnauthorizedAccessException)
             {

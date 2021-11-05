@@ -70,6 +70,20 @@ namespace CinemaApp.API.Controllers
             }
         }
 
+        [HttpGet("info/{id}")]
+        public IActionResult GetScreeningInfo(int id)
+        {
+            try
+            {
+                var screeningInfo = _screeningService.GetScreeningInfoById(id);
+                return Ok(screeningInfo);
+            }
+            catch(Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
         [HttpPost("add")]
         public IActionResult AddScreening([FromBody]ScreeningToAddDTO screeningDTO)
         {

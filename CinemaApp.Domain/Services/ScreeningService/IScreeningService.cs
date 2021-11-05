@@ -2,6 +2,7 @@
 using CinemaApp.Database.Entities.UserModels;
 using CinemaApp.Domain.DTO;
 using CinemaApp.Domain.DTO.ScreeningDayDTOModels;
+using CinemaApp.Domain.DTO.SeatsToDisplay;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,7 @@ namespace CinemaApp.Domain.Services.ScreeningService
         public void AddScreening(ScreeningToAddDTO screening);
         public IEnumerable<ScreeningDTO> GetAllScreenings();
         public void DeleteScreeningById(int id);
-        public IEnumerable<SeatDTO> GetAllScreeningSeats(int id);
+        public IEnumerable<SeatRowDTO> GetAllScreeningSeats(int id);
+        public ScreeningInfoDTO GetScreeningInfoById(int id);
     }
 }

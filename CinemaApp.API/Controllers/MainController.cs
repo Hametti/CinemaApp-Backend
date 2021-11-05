@@ -38,19 +38,26 @@ namespace CinemaApp.API.Controllers
         [HttpPost("authenticate")]
         public IActionResult Authenticate([FromBody]UserCred userCred)
         {
-            var userCredCorrect = authenticationRepository.AreUserCredsCorrect(userCred.Email, userCred.Password);
+            try
+            {
+                var userCredCorrect = authenticationRepository.AreUserCredsCorrect(userCred.Email, userCred.Password);
 
-            if (!userCredCorrect)
-                return Unauthorized(null);
-                
-            string role;
-            if (userRepository.GetUserByEmail(userCred.Email).IsAdmin)
-                role = "admin";
-            else
-                role = "user";
+                if (!userCredCorrect)
+                    return Unauthorized(null);
 
-            var token = jwtAuthenticationManager.Authenticate(userCred.Email, userCred.Password, role);
-            return Ok(token);
+                string role;
+                if (userRepository.GetUserByEmail(userCred.Email).IsAdmin)
+                    role = "admin";
+                else
+                    role = "user";
+
+                var token = jwtAuthenticationManager.Authenticate(userCred.Email, userCred.Password, role);
+                return Ok(token);
+            }
+            catch(Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
     }
 }

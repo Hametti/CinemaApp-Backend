@@ -4,6 +4,7 @@ using CinemaApp.Domain.DTO;
 using CinemaApp.Domain.DTO.Reservation;
 using CinemaApp.Domain.DTO.ScreeningDayDTOModels;
 using CinemaApp.Domain.DTO.ScreeningToDisplayDTO;
+using CinemaApp.Domain.DTO.SeatsToDisplay;
 using CinemaApp.Domain.DTO.UserDTO;
 using System;
 using System.Collections.Generic;
@@ -172,6 +173,35 @@ namespace CinemaApp.Domain.Helpers
                 screeningDaysToDisplayDTO.Add(ScreeningDayToScreeningDayToDisplayDTO(screeningDay));
 
             return screeningDaysToDisplayDTO;
+        }
+
+        public static IEnumerable<SeatRowDTO> SeatsToSeatRowDTOs(IEnumerable<Seat> seats)
+        {
+            var seatDTOs = SeatsToDTOs(seats);
+            var seatRows = new List<SeatRowDTO>();
+            for(int i=0; i<10; i++)
+            {
+                var seatRow = seatDTOs
+                    .Where(s => s.Row == i + 1)
+                    .OrderBy(s => s.SeatNumber)
+                    .ToList();
+
+                seatRows.Add(new SeatRowDTO { Seats = seatRow });
+            }
+
+            return seatRows;
+        }
+
+        public static ScreeningInfoDTO ScreeningToScreeningInfoDTO(Screening screening)
+        {
+            var screeningInfoDTO = new ScreeningInfoDTO
+            {
+                Date = screening.ScreeningDay.Date,
+                Hour = screening.Hour,
+                MovieTitle = screening.Movie.Title
+            };
+
+            return screeningInfoDTO;
         }
     }
 }

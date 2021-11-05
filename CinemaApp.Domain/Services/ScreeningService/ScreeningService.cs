@@ -5,6 +5,7 @@ using CinemaApp.Database.Entities.MovieModels;
 using CinemaApp.Database.Entities.UserModels;
 using CinemaApp.Domain.DTO;
 using CinemaApp.Domain.DTO.ScreeningDayDTOModels;
+using CinemaApp.Domain.DTO.SeatsToDisplay;
 using CinemaApp.Domain.Exceptions;
 using CinemaApp.Domain.Helpers;
 using System;
@@ -109,11 +110,19 @@ namespace CinemaApp.Domain.Services.ScreeningService
             return seats;
         }
 
-        public IEnumerable<SeatDTO> GetAllScreeningSeats(int id)
+        public IEnumerable<SeatRowDTO> GetAllScreeningSeats(int id)
         {
             var seats = _screeningRepository.GetAllScreeningSeats(id);
-            var seatDTOs = DTOHelper.SeatsToDTOs(seats);
-            return seatDTOs;
+            var seatRowDTOs = DTOHelper.SeatsToSeatRowDTOs(seats);
+            return seatRowDTOs;
+        }
+
+        public ScreeningInfoDTO GetScreeningInfoById(int id)
+        {
+            var screening = _screeningRepository.GetEntityById(id);
+            var screeningInfoDTO = DTOHelper.ScreeningToScreeningInfoDTO(screening);
+            
+            return screeningInfoDTO;
         }
     }
 }
